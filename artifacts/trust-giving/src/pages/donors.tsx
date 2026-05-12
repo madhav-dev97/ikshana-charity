@@ -17,7 +17,7 @@ export default function Donors() {
   return (
     <div className="min-h-screen pb-20 animate-in fade-in duration-500">
       {/* Header */}
-      <div className="bg-gradient-to-br from-primary via-primary/90 to-secondary/80 pt-20 pb-16 px-4 relative overflow-hidden">
+      <div className="bg-gradient-to-br from-primary via-primary/90 to-secondary/70 pt-20 pb-16 px-4 relative overflow-hidden">
         <div className="absolute inset-0 opacity-10 pointer-events-none">
           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
             <defs>
@@ -29,25 +29,26 @@ export default function Donors() {
           </svg>
         </div>
         <div className="container max-w-4xl mx-auto text-center relative z-10">
+          <p className="text-primary-foreground/70 text-xs font-bold uppercase tracking-widest mb-4">IKSHANA CHARITABLE TRUST</p>
           <div className="inline-flex items-center justify-center p-3 bg-primary-foreground/20 text-primary-foreground rounded-full mb-6">
             <Sparkles className="w-6 h-6" />
           </div>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold mb-6 text-primary-foreground">Daaniyon Ki Deewar</h1>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold mb-6 text-primary-foreground">The Donor Wall</h1>
           <p className="text-xl text-primary-foreground/80 leading-relaxed max-w-2xl mx-auto">
-            Har daan ek kadam hai behtar kal ki taraf. Yeh deewar un sabka sammaan hai jo aage aaye — 
-            chahe chhota ho ya bada, har yogdan ahem hai.
+            A celebration of generosity. This wall stands as a testament to the kindness of our community.
+            Every gift, regardless of size, creates profound and lasting change.
           </p>
 
           {stats && (
-            <div className="mt-12 inline-flex items-center gap-6 px-8 py-4 rounded-full bg-primary-foreground/20 border border-primary-foreground/30 backdrop-blur-sm shadow-xl">
+            <div className="mt-12 inline-flex items-center gap-8 px-8 py-4 rounded-full bg-primary-foreground/20 border border-primary-foreground/30 backdrop-blur-sm shadow-xl">
               <div className="text-center">
                 <span className="block text-3xl font-bold text-primary-foreground">{stats.totalDonors.toLocaleString("en-IN")}</span>
-                <span className="text-xs uppercase tracking-wider text-primary-foreground/70 font-medium">Daani</span>
+                <span className="text-xs uppercase tracking-wider text-primary-foreground/70 font-medium">Donors</span>
               </div>
               <div className="w-px h-10 bg-primary-foreground/30"></div>
               <div className="text-center">
                 <span className="block text-3xl font-bold text-primary-foreground">{formatINR(stats.totalRaised)}</span>
-                <span className="text-xs uppercase tracking-wider text-primary-foreground/70 font-medium">Kul Daan</span>
+                <span className="text-xs uppercase tracking-wider text-primary-foreground/70 font-medium">Total Contributed</span>
               </div>
             </div>
           )}
@@ -82,42 +83,40 @@ export default function Donors() {
               >
                 <Card className="rounded-2xl border-border/60 shadow-sm hover:shadow-lg transition-all bg-card h-full hover:border-primary/30">
                   <CardContent className="p-6">
-                    <div className="flex justify-between items-start mb-4 gap-4">
-                      <div className="flex items-center gap-3">
-                        <div className={`flex items-center justify-center w-12 h-12 rounded-full font-bold text-lg ${
-                          donor.isAnonymous
-                            ? 'bg-muted text-muted-foreground'
-                            : 'bg-primary text-primary-foreground'
-                        }`}>
-                          {donor.isAnonymous
-                            ? <UserRound className="w-6 h-6" />
-                            : <span className="font-serif">{donor.name.charAt(0)}</span>
-                          }
-                        </div>
-                        <div>
-                          <h3 className="font-semibold text-lg leading-tight">
-                            {donor.isAnonymous ? "Ek Udaar Daani" : donor.name}
-                          </h3>
-                          <div className="flex items-center gap-1 text-xs text-muted-foreground font-medium mt-0.5">
-                            <span className="text-primary font-bold text-sm">{formatINR(donor.amount)}</span>
-                            <span>•</span>
-                            <span className="line-clamp-1">{donor.causeTitle}</span>
-                          </div>
+                    <div className="flex items-start gap-3 mb-4">
+                      <div className={`flex items-center justify-center w-12 h-12 rounded-full font-bold text-lg shrink-0 ${
+                        donor.isAnonymous
+                          ? 'bg-muted text-muted-foreground'
+                          : 'bg-primary text-primary-foreground'
+                      }`}>
+                        {donor.isAnonymous
+                          ? <UserRound className="w-5 h-5" />
+                          : <span className="font-serif">{donor.name.charAt(0)}</span>
+                        }
+                      </div>
+                      <div className="min-w-0">
+                        <h3 className="font-semibold text-base leading-tight truncate">
+                          {donor.isAnonymous ? "Anonymous Donor" : donor.name}
+                        </h3>
+                        <div className="flex items-center gap-1 text-xs text-muted-foreground font-medium mt-0.5 flex-wrap">
+                          <span className="text-primary font-bold text-sm">{formatINR(donor.amount)}</span>
+                          <span>·</span>
+                          <span className="truncate max-w-[130px]">{donor.causeTitle}</span>
                         </div>
                       </div>
                     </div>
 
                     {donor.message && (
-                      <div className="mt-4 pt-4 border-t border-border/40 relative">
-                        <Quote className="absolute -top-3 left-1 w-5 h-5 text-primary/30 rotate-180 bg-card" />
-                        <p className="text-muted-foreground italic text-sm leading-relaxed relative z-10 pl-2">
+                      <div className="mt-3 pt-3 border-t border-border/40 relative">
+                        <Quote className="absolute -top-2.5 left-1 w-5 h-5 text-primary/20 rotate-180 bg-card" />
+                        <p className="text-muted-foreground italic text-sm leading-relaxed pl-2">
                           "{donor.message}"
                         </p>
                       </div>
                     )}
 
                     {donor.donatedAt && (
-                      <div className="mt-4 text-[10px] text-muted-foreground/60 text-right uppercase tracking-wider">
+                      <div className="mt-3 text-[10px] text-muted-foreground/60 text-right uppercase tracking-wider">
                         {format(new Date(donor.donatedAt), "d MMM yyyy")}
                       </div>
                     )}
@@ -131,8 +130,8 @@ export default function Donors() {
         {!isLoading && sortedDonors.length === 0 && (
           <div className="text-center py-32 bg-card rounded-3xl border shadow-sm">
             <Heart className="w-12 h-12 text-muted-foreground/30 mx-auto mb-4" />
-            <h3 className="text-xl font-serif font-medium mb-2">Deewar aapka intezaar kar rahi hai</h3>
-            <p className="text-muted-foreground">Pehle daani bano aur apni daanshilta ko yahan jagah do.</p>
+            <h3 className="text-xl font-serif font-medium mb-2">The wall is waiting</h3>
+            <p className="text-muted-foreground">Be the first to add your generosity to our wall.</p>
           </div>
         )}
       </div>

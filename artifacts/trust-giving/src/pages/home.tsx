@@ -1,6 +1,6 @@
 import { useGetCurrentCause, useGetStatsSummary } from "@workspace/api-client-react";
 import { Link } from "wouter";
-import { Heart, ArrowRight, Users, Target, Activity } from "lucide-react";
+import { Heart, ArrowRight, Users, Target, Activity, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -21,34 +21,37 @@ export default function Home() {
         <div className="absolute inset-0 z-0">
           <img
             src={heroBg}
-            alt="Ikshana Charitable Trust"
+            alt="IKSHANA CHARITABLE TRUST"
             className="w-full h-full object-cover object-center"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-background/30 mix-blend-multiply" />
-          <div className="absolute inset-0 bg-background/40 backdrop-blur-[2px]" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/75 to-background/20" />
         </div>
 
         <div className="container relative z-10 px-4 py-24 md:py-32 flex flex-col items-center text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary text-primary-foreground border border-primary mb-8 animate-in slide-in-from-bottom-4 duration-700 delay-100 fill-mode-both shadow-lg">
-            <Heart className="w-4 h-4 fill-current animate-pulse" />
-            <span className="text-sm font-semibold">Ikshana Charitable Trust — Seva, Samarpan, Sewa</span>
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary text-primary-foreground mb-8 animate-in slide-in-from-bottom-4 duration-700 delay-100 fill-mode-both shadow-lg">
+            <Heart className="w-4 h-4 fill-current" />
+            <span className="text-sm font-semibold tracking-wide">IKSHANA CHARITABLE TRUST</span>
           </div>
 
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif font-bold text-foreground max-w-4xl tracking-tight leading-[1.1] mb-6 animate-in slide-in-from-bottom-6 duration-700 delay-200 fill-mode-both drop-shadow-sm">
-            Ek kadam aage,<br />
-            <span className="text-primary italic">hazaar zindagiyan badlen.</span>
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif font-bold text-foreground max-w-4xl tracking-tight leading-[1.1] mb-4 animate-in slide-in-from-bottom-6 duration-700 delay-200 fill-mode-both">
+            Manava Seve,<br />
+            <span className="text-primary italic">Madhava Seva.</span>
           </h1>
+
+          <p className="text-base md:text-lg text-muted-foreground max-w-xl mb-3 animate-in slide-in-from-bottom-7 duration-700 delay-250 fill-mode-both font-medium">
+            Service to Man is Service to God.
+          </p>
 
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mb-12 leading-relaxed animate-in slide-in-from-bottom-8 duration-700 delay-300 fill-mode-both">
             Join thousands across India supporting one meaningful cause every month.
-            Together, our small acts of kindness create monumental, lasting change.
+            Together, small acts of giving create lasting, monumental change.
           </p>
 
           {/* Current Cause Highlight Card */}
-          <div className="w-full max-w-3xl bg-card/95 backdrop-blur-md border-2 border-primary/20 rounded-2xl shadow-2xl p-6 md:p-8 animate-in slide-in-from-bottom-10 duration-700 delay-500 fill-mode-both text-left">
+          <div className="w-full max-w-3xl bg-card/95 backdrop-blur-md border-2 border-primary/25 rounded-2xl shadow-2xl p-6 md:p-8 animate-in slide-in-from-bottom-10 duration-700 delay-500 fill-mode-both text-left">
             <div className="flex items-center gap-2 mb-4">
-              <span className="inline-block w-3 h-3 rounded-full bg-primary animate-pulse"></span>
-              <h2 className="text-sm font-bold uppercase tracking-wider text-primary">Is Maah Ka Cause</h2>
+              <span className="inline-block w-2.5 h-2.5 rounded-full bg-primary animate-pulse"></span>
+              <h2 className="text-xs font-bold uppercase tracking-widest text-primary">This Month's Cause</h2>
             </div>
 
             {loadingCause ? (
@@ -81,7 +84,7 @@ export default function Home() {
                       </span>
                       <span className="text-sm text-muted-foreground">raised</span>
                     </div>
-                    <div className="text-sm font-medium text-muted-foreground text-right">
+                    <div className="text-sm font-medium text-muted-foreground">
                       Goal: {formatINR(currentCause.goalAmount)}
                     </div>
                   </div>
@@ -94,32 +97,34 @@ export default function Home() {
 
                 <div className="pt-2 flex flex-col sm:flex-row gap-4">
                   <Link href="/donate" className="flex-1">
-                    <Button size="lg" className="w-full rounded-xl text-lg h-14 shadow-lg hover:shadow-xl transition-all bg-primary hover:bg-primary/90">
-                      Abhi Donate Karein <ArrowRight className="ml-2 w-5 h-5" />
+                    <Button size="lg" className="w-full rounded-xl text-lg h-14 shadow-lg hover:shadow-xl transition-all">
+                      Donate Now <ArrowRight className="ml-2 w-5 h-5" />
                     </Button>
                   </Link>
                   <Link href="/causes" className="flex-1">
-                    <Button size="lg" variant="outline" className="w-full rounded-xl text-lg h-14 bg-transparent hover:bg-muted/50 border-primary/40 text-primary">
-                      Aur Jaanein
+                    <Button size="lg" variant="outline" className="w-full rounded-xl text-lg h-14 border-primary/40 text-primary hover:bg-primary/5">
+                      Learn More
                     </Button>
                   </Link>
                 </div>
               </div>
             ) : (
               <div className="py-8 text-center text-muted-foreground">
-                <p>Is maah koi active cause nahi hai.</p>
+                <p>No active cause this month. Check back soon.</p>
               </div>
             )}
           </div>
         </div>
       </section>
 
-      {/* Global Impact Stats */}
+      {/* Impact Stats */}
       <section className="py-24 bg-primary text-primary-foreground">
         <div className="container px-4">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-serif font-bold mb-4 text-primary-foreground">Hamara Samuhik Prabhav</h2>
-            <p className="text-primary-foreground/80 max-w-2xl mx-auto">Every rupee donated is a step towards a better India. We believe in complete transparency and celebrate our community's generosity together.</p>
+            <h2 className="text-3xl md:text-4xl font-serif font-bold mb-4">Our Collective Impact</h2>
+            <p className="text-primary-foreground/80 max-w-2xl mx-auto">
+              Every rupee donated is a step towards a better India. We believe in complete transparency and celebrate our community's generosity together.
+            </p>
           </div>
 
           {loadingStats ? (
@@ -135,29 +140,23 @@ export default function Home() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
               <div className="p-8 rounded-2xl bg-primary-foreground/10 border border-primary-foreground/20 flex flex-col items-center justify-center text-center group hover:bg-primary-foreground/20 transition-all">
                 <div className="bg-primary-foreground/20 p-4 rounded-full mb-4 group-hover:scale-110 transition-transform">
-                  <Activity className="w-8 h-8 text-primary-foreground" />
+                  <Activity className="w-8 h-8" />
                 </div>
-                <h3 className="text-4xl md:text-5xl font-bold mb-2 tracking-tight text-primary-foreground">
-                  {formatINR(stats.totalRaised)}
-                </h3>
-                <p className="text-primary-foreground/70 font-medium uppercase tracking-widest text-sm">Kul Sangraha</p>
+                <h3 className="text-4xl md:text-5xl font-bold mb-2">{formatINR(stats.totalRaised)}</h3>
+                <p className="text-primary-foreground/70 font-medium uppercase tracking-widest text-sm">Total Raised</p>
               </div>
               <div className="p-8 rounded-2xl bg-primary-foreground/10 border border-primary-foreground/20 flex flex-col items-center justify-center text-center group hover:bg-primary-foreground/20 transition-all">
                 <div className="bg-primary-foreground/20 p-4 rounded-full mb-4 group-hover:scale-110 transition-transform">
-                  <Users className="w-8 h-8 text-primary-foreground" />
+                  <Users className="w-8 h-8" />
                 </div>
-                <h3 className="text-4xl md:text-5xl font-bold mb-2 tracking-tight text-primary-foreground">
-                  {stats.totalDonors.toLocaleString("en-IN")}
-                </h3>
-                <p className="text-primary-foreground/70 font-medium uppercase tracking-widest text-sm">Daan Karta</p>
+                <h3 className="text-4xl md:text-5xl font-bold mb-2">{stats.totalDonors.toLocaleString("en-IN")}</h3>
+                <p className="text-primary-foreground/70 font-medium uppercase tracking-widest text-sm">Donors</p>
               </div>
               <div className="p-8 rounded-2xl bg-primary-foreground/10 border border-primary-foreground/20 flex flex-col items-center justify-center text-center group hover:bg-primary-foreground/20 transition-all">
                 <div className="bg-primary-foreground/20 p-4 rounded-full mb-4 group-hover:scale-110 transition-transform">
-                  <Target className="w-8 h-8 text-primary-foreground" />
+                  <Target className="w-8 h-8" />
                 </div>
-                <h3 className="text-4xl md:text-5xl font-bold mb-2 tracking-tight text-primary-foreground">
-                  {stats.activeCauses || 6}
-                </h3>
+                <h3 className="text-4xl md:text-5xl font-bold mb-2">{stats.activeCauses || 6}</h3>
                 <p className="text-primary-foreground/70 font-medium uppercase tracking-widest text-sm">Causes Supported</p>
               </div>
             </div>
@@ -165,24 +164,42 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Trust Message */}
+      {/* Trust Section */}
       <section className="py-24 bg-card">
-        <div className="container px-4 max-w-4xl text-center">
-          <div className="w-16 h-1 bg-primary mx-auto mb-8 rounded-full"></div>
-          <h2 className="text-3xl md:text-5xl font-serif leading-tight mb-8">
-            "Wo jo deta hai, woh pata hai jeevan ka sachcha arth."
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-4">
-            Ikshana Charitable Trust follows a simple principle: each month, we focus the community's collective energy on one carefully vetted cause. No scattered efforts, no hidden overhead — just pure, concentrated impact where it matters most, right here in India.
-          </p>
-          <p className="text-sm text-muted-foreground mb-10">
-            Registered Charitable Trust | 80G Tax Exemption Eligible | FCRA Compliant
-          </p>
-          <Link href="/donors">
-            <Button variant="outline" size="lg" className="rounded-full border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all">
-              Donor Wall Dekhein
-            </Button>
-          </Link>
+        <div className="container px-4 max-w-4xl">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div>
+              <div className="w-12 h-1 bg-primary mb-6 rounded-full"></div>
+              <h2 className="text-3xl md:text-4xl font-serif font-bold mb-6">
+                Why IKSHANA CHARITABLE TRUST?
+              </h2>
+              <p className="text-muted-foreground leading-relaxed mb-6">
+                We operate on a simple, powerful principle — every month, we focus the entire community's energy on one carefully vetted cause. No scattered efforts, no opaque overhead. Just concentrated, transparent impact where it's needed most.
+              </p>
+              <Link href="/donors">
+                <Button variant="outline" size="lg" className="rounded-full border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all">
+                  See the Donor Wall
+                </Button>
+              </Link>
+            </div>
+            <div className="space-y-4">
+              {[
+                { icon: ShieldCheck, title: "100% Transparent", desc: "Every rupee accounted for. Full financial disclosure every month." },
+                { icon: Heart, title: "80G Tax Benefit", desc: "All donations eligible for tax exemption under Section 80G of the IT Act." },
+                { icon: Target, title: "One Cause at a Time", desc: "Focused giving means deeper impact. One vetted cause, every month." },
+              ].map(({ icon: Icon, title, desc }) => (
+                <div key={title} className="flex items-start gap-4 p-4 rounded-xl border bg-background hover:border-primary/30 transition-colors">
+                  <div className="bg-primary/10 p-2.5 rounded-lg text-primary shrink-0">
+                    <Icon className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold mb-1">{title}</h4>
+                    <p className="text-sm text-muted-foreground">{desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
     </div>

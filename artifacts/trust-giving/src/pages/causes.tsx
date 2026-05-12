@@ -24,12 +24,13 @@ export default function Causes() {
   return (
     <div className="animate-in fade-in duration-500">
       {/* Page Header */}
-      <div className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground py-16 md:py-24 px-4">
+      <div className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground py-16 md:py-20 px-4">
         <div className="container max-w-4xl mx-auto">
-          <h1 className="text-4xl md:text-5xl font-serif font-bold mb-4">Maasik Causes</h1>
-          <p className="text-xl text-primary-foreground/80 leading-relaxed">
-            Har maah hum ek carefully vetted cause pe apni poori urja lagaate hain.
-            Hamari community ke impact ki kahani yahan hai.
+          <p className="text-primary-foreground/70 text-sm font-semibold uppercase tracking-widest mb-3">IKSHANA CHARITABLE TRUST</p>
+          <h1 className="text-4xl md:text-5xl font-serif font-bold mb-4">Monthly Causes</h1>
+          <p className="text-xl text-primary-foreground/80 leading-relaxed max-w-2xl">
+            Every month we focus our collective energy on a single, carefully vetted cause.
+            Explore the history of our community's impact across India.
           </p>
         </div>
       </div>
@@ -55,7 +56,7 @@ export default function Causes() {
           <Alert variant="destructive" className="mb-8">
             <AlertCircle className="h-4 w-4" />
             <AlertTitle>Error</AlertTitle>
-            <AlertDescription>Causes load nahi ho sake. Kripya baad mein try karein.</AlertDescription>
+            <AlertDescription>Failed to load causes. Please try again later.</AlertDescription>
           </Alert>
         )}
 
@@ -71,7 +72,7 @@ export default function Causes() {
                 <div
                   key={cause.id}
                   className={`group flex flex-col rounded-2xl border bg-card shadow-sm hover:shadow-xl transition-all overflow-hidden ${
-                    isCurrent ? 'ring-2 ring-primary border-transparent shadow-primary/20 shadow-lg' : ''
+                    isCurrent ? 'ring-2 ring-primary border-transparent' : ''
                   }`}
                 >
                   <div className="relative h-56 overflow-hidden bg-muted">
@@ -87,8 +88,8 @@ export default function Causes() {
 
                     <div className="absolute top-4 right-4 flex gap-2">
                       {isCurrent && (
-                        <Badge className="bg-primary hover:bg-primary text-primary-foreground font-semibold px-3 shadow-md animate-pulse">
-                          Abhi Chal Raha Hai
+                        <Badge className="bg-primary hover:bg-primary text-primary-foreground font-semibold px-3 shadow-md">
+                          Active This Month
                         </Badge>
                       )}
                       {isFunded && !isCurrent && (
@@ -98,8 +99,8 @@ export default function Causes() {
                       )}
                     </div>
 
-                    <div className="absolute bottom-4 left-4 text-white">
-                      <Badge variant="outline" className="text-white border-white/40 bg-black/40 backdrop-blur-md mb-2">
+                    <div className="absolute bottom-4 left-4">
+                      <Badge variant="outline" className="text-white border-white/40 bg-black/40 backdrop-blur-md">
                         {cause.category}
                       </Badge>
                     </div>
@@ -126,7 +127,7 @@ export default function Causes() {
                         </div>
                         <Progress
                           value={progress}
-                          className="h-2.5 rounded-full bg-secondary/30"
+                          className="h-2.5 rounded-full bg-secondary/20"
                           indicatorClassName={isFunded ? "bg-green-500" : "bg-primary"}
                         />
                         <p className="text-xs text-muted-foreground text-right">{Math.round(progress)}% funded</p>
@@ -134,16 +135,17 @@ export default function Causes() {
 
                       {isCurrent ? (
                         <Link href="/donate" className="block w-full">
-                          <Button className="w-full rounded-xl shadow-sm bg-primary hover:bg-primary/90">
-                            Donate Karein <ArrowRight className="ml-2 w-4 h-4" />
+                          <Button className="w-full rounded-xl">
+                            Donate Now <ArrowRight className="ml-2 w-4 h-4" />
                           </Button>
                         </Link>
                       ) : (
-                        <div className="flex flex-col gap-2 pt-2 border-t">
-                          <div className="text-xs text-muted-foreground">
-                            <span className="font-semibold text-foreground">Prabhav:</span> {cause.impact || "Details coming soon"}
+                        cause.impact && (
+                          <div className="pt-2 border-t text-xs text-muted-foreground">
+                            <span className="font-semibold text-foreground">Impact: </span>
+                            {cause.impact}
                           </div>
-                        </div>
+                        )
                       )}
                     </div>
                   </div>
@@ -155,7 +157,7 @@ export default function Causes() {
 
         {!isLoading && !error && sortedCauses.length === 0 && (
           <div className="text-center py-20 bg-muted/50 rounded-2xl border border-dashed">
-            <p className="text-muted-foreground">Koi cause nahi mila.</p>
+            <p className="text-muted-foreground">No causes found. Check back soon.</p>
           </div>
         )}
       </div>
