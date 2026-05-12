@@ -1,22 +1,29 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Trust Giving - Charity Platform API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: causes
+    description: Monthly causes
+  - name: donors
+    description: Donor records
+  - name: donations
+    description: Donation operations
+  - name: stats
+    description: Statistics and summaries
+
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +31,133 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /causes:
+    get:
+      operationId: listCauses
+      tags: [causes]
+      summary: List all monthly causes
+      responses:
+        "200":
+          description: List of causes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Cause"
+
+  /causes/current:
+    get:
+      operationId: getCurrentCause
+      tags: [causes]
+      summary: Get the current month's cause
+      responses:
+        "200":
+          description: Current cause
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cause"
+        "404":
+          description: No current cause found
+
+  /causes/{id}:
+    get:
+      operationId: getCause
+      tags: [causes]
+      summary: Get a specific cause
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Cause detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cause"
+        "404":
+          description: Not found
+
+  /donors:
+    get:
+      operationId: listDonors
+      tags: [donors]
+      summary: List donors, optionally filtered by month/year
+      parameters:
+        - name: month
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: year
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of donors
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Donor"
+
+  /donations:
+    post:
+      operationId: createDonation
+      tags: [donations]
+      summary: Create a new donation and return receipt
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DonationInput"
+      responses:
+        "201":
+          description: Donation created with receipt
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DonationReceipt"
+        "400":
+          description: Invalid input
+
+  /stats/summary:
+    get:
+      operationId: getStatsSummary
+      tags: [stats]
+      summary: Get overall donation statistics
+      responses:
+        "200":
+          description: Stats summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StatsSummary"
+
+  /stats/monthly:
+    get:
+      operationId: getMonthlyStats
+      tags: [stats]
+      summary: Get donation totals grouped by month
+      responses:
+        "200":
+          description: Monthly stats
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MonthlyStatItem"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +168,132 @@ components:
       required:
         - status
 
+    Cause:
+      type: object
+      required: [id, title, description, month, year, goalAmount, raisedAmount, imageUrl, category, isCurrent]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        month:
+          type: integer
+        year:
+          type: integer
+        goalAmount:
+          type: number
+        raisedAmount:
+          type: number
+        imageUrl:
+          type: ["string", "null"]
+        category:
+          type: string
+        isCurrent:
+          type: boolean
+        impact:
+          type: ["string", "null"]
+        beneficiaries:
+          type: ["string", "null"]
+
+    Donor:
+      type: object
+      required: [id, name, amount, month, year, causeTitle, isAnonymous]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        amount:
+          type: number
+        month:
+          type: integer
+        year:
+          type: integer
+        causeTitle:
+          type: string
+        isAnonymous:
+          type: boolean
+        message:
+          type: ["string", "null"]
+        donatedAt:
+          type: string
+
+    DonationInput:
+      type: object
+      required: [donorName, email, amount, causeId]
+      properties:
+        donorName:
+          type: string
+        email:
+          type: string
+        amount:
+          type: number
+        causeId:
+          type: integer
+        message:
+          type: ["string", "null"]
+        isAnonymous:
+          type: boolean
+        phone:
+          type: ["string", "null"]
+
+    DonationReceipt:
+      type: object
+      required: [receiptId, donorName, email, amount, causeTitle, donatedAt, receiptNumber]
+      properties:
+        receiptId:
+          type: integer
+        receiptNumber:
+          type: string
+        donorName:
+          type: string
+        email:
+          type: string
+        amount:
+          type: number
+        causeTitle:
+          type: string
+        causeDescription:
+          type: string
+        donatedAt:
+          type: string
+        message:
+          type: ["string", "null"]
+        trustName:
+          type: string
+        taxExemptStatus:
+          type: string
+
+    StatsSummary:
+      type: object
+      required: [totalDonations, totalDonors, totalRaised, currentMonthRaised, currentCauseTitle]
+      properties:
+        totalDonations:
+          type: integer
+        totalDonors:
+          type: integer
+        totalRaised:
+          type: number
+        currentMonthRaised:
+          type: number
+        currentCauseTitle:
+          type: string
+        activeCauses:
+          type: integer
+
+    MonthlyStatItem:
+      type: object
+      required: [month, year, totalRaised, donorCount, causeTitle]
+      properties:
+        month:
+          type: integer
+        year:
+          type: integer
+        totalRaised:
+          type: number
+        donorCount:
+          type: integer
+        causeTitle:
+          type: string
