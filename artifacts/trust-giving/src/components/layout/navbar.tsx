@@ -24,7 +24,7 @@ export function Navbar() {
           </div>
           <div className="flex flex-col leading-tight">
             <span className="font-serif text-sm font-bold tracking-tight text-primary leading-none">IKSHANA CHARITABLE TRUST</span>
-            <span className="text-[10px] text-muted-foreground font-medium tracking-wide">Manava Seve, Madhava Seva</span>
+            <span className="text-[10px] text-muted-foreground font-medium tracking-wide">A Visionary of Kindness</span>
           </div>
         </Link>
 
