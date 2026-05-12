@@ -10,6 +10,7 @@ import Causes from "@/pages/causes";
 import Donors from "@/pages/donors";
 import Donate from "@/pages/donate";
 import Receipt from "@/pages/receipt";
+import About from "@/pages/about";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -29,6 +30,7 @@ function Router() {
         <Route path="/donors" component={Donors} />
         <Route path="/donate" component={Donate} />
         <Route path="/receipt" component={Receipt} />
+        <Route path="/about" component={About} />
         <Route component={NotFound} />
       </Switch>
     </MainLayout>

@@ -17,32 +17,31 @@ export function Footer() {
               </div>
             </Link>
             <p className="text-muted-foreground text-sm max-w-md leading-relaxed">
-              A registered charitable trust bringing communities together every month to support meaningful causes across India.
-              Because collective giving changes lives.
+              A registered charitable trust based in Telangana, bringing communities together every month to support meaningful causes across India.
             </p>
             <div className="text-xs text-muted-foreground space-y-1">
-              <p>Registered under the Indian Trusts Act</p>
-              <p>Donations eligible for 80G tax exemption · FCRA Compliant</p>
+              <p>Trust Reg. No. <span className="font-semibold text-foreground">242/2023</span> · Telangana</p>
+              <p>NGO Darpan Registered · 80G Application in Progress</p>
             </div>
           </div>
 
           <div>
-            <h4 className="font-semibold mb-4 text-sm uppercase tracking-wider text-muted-foreground">Platform</h4>
+            <h4 className="font-semibold mb-4 text-xs uppercase tracking-wider text-muted-foreground">Platform</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li><Link href="/" className="hover:text-primary transition-colors">Home</Link></li>
               <li><Link href="/causes" className="hover:text-primary transition-colors">Monthly Causes</Link></li>
               <li><Link href="/donors" className="hover:text-primary transition-colors">Donor Wall</Link></li>
-              <li><Link href="/donate" className="hover:text-primary transition-colors font-medium text-primary">Donate Now</Link></li>
+              <li><Link href="/donate" className="hover:text-primary transition-colors font-semibold text-primary">Donate Now</Link></li>
             </ul>
           </div>
 
           <div>
-            <h4 className="font-semibold mb-4 text-sm uppercase tracking-wider text-muted-foreground">Trust</h4>
+            <h4 className="font-semibold mb-4 text-xs uppercase tracking-wider text-muted-foreground">Organisation</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><a href="#" className="hover:text-primary transition-colors">About Us</a></li>
-              <li><a href="#" className="hover:text-primary transition-colors">Contact</a></li>
+              <li><Link href="/about" className="hover:text-primary transition-colors">About Us</Link></li>
+              <li><Link href="/about" className="hover:text-primary transition-colors">Registration Details</Link></li>
+              <li><a href="mailto:ikshanacharitabletrust@gmail.com" className="hover:text-primary transition-colors">Contact</a></li>
               <li><a href="#" className="hover:text-primary transition-colors">Privacy Policy</a></li>
-              <li><a href="#" className="hover:text-primary transition-colors">80G Certificate</a></li>
             </ul>
           </div>
         </div>

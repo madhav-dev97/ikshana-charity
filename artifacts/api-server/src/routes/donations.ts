@@ -119,7 +119,7 @@ router.post("/donations", async (req, res) => {
       donatedAt: donation.donatedAt.toISOString(),
       message: donation.message ?? null,
       trustName: "IKSHANA CHARITABLE TRUST",
-      taxExemptStatus: "This trust is registered under the Indian Trusts Act. Donations are eligible for tax exemption under Section 80G of the Income Tax Act, 1961. This receipt serves as official proof of donation for IT filing purposes.",
+      taxExemptStatus: "This trust is registered under the Indian Trusts Act (Trust Reg. No. 242/2023, Telangana). An application for 80G tax exemption is currently in progress with the Income Tax Department. An updated receipt will be issued once approved.",
     });
   } catch (err) {
     console.error(err);

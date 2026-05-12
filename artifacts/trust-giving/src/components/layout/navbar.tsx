@@ -12,6 +12,7 @@ export function Navbar() {
     { href: "/", label: "Home" },
     { href: "/causes", label: "Monthly Causes" },
     { href: "/donors", label: "Donor Wall" },
+    { href: "/about", label: "About Us" },
   ];
 
   return (
@@ -44,7 +45,7 @@ export function Navbar() {
               )}
             </Link>
           ))}
-          <Link href="/donate" className="ml-4">
+          <Link href="/donate" className="ml-2">
             <Button className="rounded-full shadow-md hover:shadow-lg transition-all font-semibold">
               Donate Now
             </Button>
@@ -63,14 +64,14 @@ export function Navbar() {
 
       {/* Mobile Nav */}
       {isOpen && (
-        <div className="md:hidden border-t bg-background p-4 flex flex-col gap-4 animate-in slide-in-from-top-2">
+        <div className="md:hidden border-t bg-background p-4 flex flex-col gap-3 animate-in slide-in-from-top-2">
           {links.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               onClick={() => setIsOpen(false)}
               className={cn(
-                "block text-lg font-medium p-2 rounded-md transition-colors",
+                "block text-base font-medium p-2.5 rounded-md transition-colors",
                 location === link.href
                   ? "bg-primary/10 text-primary"
                   : "text-muted-foreground hover:bg-muted"
@@ -79,7 +80,7 @@ export function Navbar() {
               {link.label}
             </Link>
           ))}
-          <Link href="/donate" onClick={() => setIsOpen(false)} className="mt-2">
+          <Link href="/donate" onClick={() => setIsOpen(false)} className="mt-1">
             <Button className="w-full rounded-full" size="lg">
               Donate Now
             </Button>
