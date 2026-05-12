@@ -21,7 +21,7 @@ export function Navbar() {
           <div className="bg-primary text-primary-foreground p-1.5 rounded-md group-hover:scale-110 transition-transform">
             <Heart className="w-5 h-5 fill-current" />
           </div>
-          <span className="font-serif text-xl font-bold tracking-tight text-primary">Seva Trust</span>
+          <span className="font-serif text-xl font-bold tracking-tight text-primary">Ikshana Charitable Trust</span>
         </Link>
 
         {/* Desktop Nav */}

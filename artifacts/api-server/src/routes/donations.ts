@@ -118,8 +118,8 @@ router.post("/donations", async (req, res) => {
       causeDescription: cause.description,
       donatedAt: donation.donatedAt.toISOString(),
       message: donation.message ?? null,
-      trustName: "Seva Trust",
-      taxExemptStatus: "This trust is registered under the Charitable Trusts Act. Donations may be eligible for tax exemption under applicable laws.",
+      trustName: "IKSHANA CHARITABLE TRUST",
+      taxExemptStatus: "This trust is registered under the Indian Trusts Act. Donations are eligible for tax exemption under Section 80G of the Income Tax Act, 1961. This receipt serves as official proof of donation for IT filing purposes.",
     });
   } catch (err) {
     console.error(err);

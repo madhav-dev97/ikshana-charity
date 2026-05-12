@@ -11,14 +11,17 @@ export function Footer() {
               <div className="bg-primary text-primary-foreground p-1.5 rounded-md">
                 <Heart className="w-5 h-5 fill-current" />
               </div>
-              <span className="font-serif text-xl font-bold tracking-tight text-primary">Seva Trust</span>
+              <span className="font-serif text-xl font-bold tracking-tight text-primary">Ikshana Charitable Trust</span>
             </Link>
             <p className="text-muted-foreground text-sm max-w-md leading-relaxed">
-              A sanctuary of purpose where communities come together monthly to support meaningful causes. 
-              Because collective action changes lives.
+              A registered charitable trust bringing communities together every month to support meaningful causes across India.
+              Because collective seva changes lives.
+            </p>
+            <p className="text-xs text-muted-foreground">
+              Registered under the Indian Trusts Act. Donations eligible for 80G tax exemption.
             </p>
           </div>
-          
+
           <div>
             <h4 className="font-semibold mb-4">Platform</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
@@ -27,7 +30,7 @@ export function Footer() {
               <li><Link href="/donors" className="hover:text-primary transition-colors">Donor Wall</Link></li>
             </ul>
           </div>
-          
+
           <div>
             <h4 className="font-semibold mb-4">Connect</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
@@ -37,13 +40,13 @@ export function Footer() {
             </ul>
           </div>
         </div>
-        
+
         <div className="border-t mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
-          <p>© {new Date().getFullYear()} Seva Trust. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Ikshana Charitable Trust. All rights reserved.</p>
           <div className="flex items-center gap-1">
             <span>Made with</span>
             <Heart className="w-4 h-4 text-destructive fill-current" />
-            <span>for the community</span>
+            <span>for Bharat</span>
           </div>
         </div>
       </div>

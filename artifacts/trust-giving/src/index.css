@@ -61,50 +61,50 @@
   --elevate-1: rgba(0,0,0, .03);
   --elevate-2: rgba(0,0,0, .08);
 
-  --background: 40 33% 98%;
-  --foreground: 24 30% 20%;
-  --border: 35 25% 85%;
+  --background: 40 30% 98%;
+  --foreground: 20 35% 15%;
+  --border: 30 20% 85%;
   
   --card: 0 0% 100%;
-  --card-foreground: 24 30% 20%;
-  --card-border: 35 25% 90%;
+  --card-foreground: 20 35% 15%;
+  --card-border: 30 20% 88%;
 
-  --sidebar: 40 33% 98%;
-  --sidebar-foreground: 24 30% 20%;
-  --sidebar-border: 35 25% 90%;
-  --sidebar-primary: 15 65% 50%;
+  --sidebar: 40 30% 98%;
+  --sidebar-foreground: 20 35% 15%;
+  --sidebar-border: 30 20% 88%;
+  --sidebar-primary: 22 95% 48%;
   --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 35 85% 55%;
-  --sidebar-accent-foreground: 24 30% 20%;
-  --sidebar-ring: 15 65% 50%;
+  --sidebar-accent: 43 98% 50%;
+  --sidebar-accent-foreground: 20 35% 15%;
+  --sidebar-ring: 22 95% 48%;
 
   --popover: 0 0% 100%;
-  --popover-foreground: 24 30% 20%;
-  --popover-border: 35 25% 90%;
+  --popover-foreground: 20 35% 15%;
+  --popover-border: 30 20% 88%;
 
-  --primary: 15 65% 50%; /* Terracotta */
+  --primary: 22 95% 48%; /* Deep Saffron — India's national color */
   --primary-foreground: 0 0% 100%;
   
-  --secondary: 35 85% 55%; /* Amber / Saffron */
-  --secondary-foreground: 24 30% 20%;
+  --secondary: 43 98% 50%; /* Rich Gold / Turmeric */
+  --secondary-foreground: 20 35% 15%;
   
-  --muted: 35 25% 92%;
+  --muted: 35 20% 93%;
   --muted-foreground: 24 15% 45%;
   
-  --accent: 35 85% 55%;
-  --accent-foreground: 24 30% 20%;
+  --accent: 43 98% 50%;
+  --accent-foreground: 20 35% 15%;
 
-  --destructive: 0 70% 50%;
+  --destructive: 0 80% 50%;
   --destructive-foreground: 0 0% 100%;
 
-  --input: 35 25% 85%;
-  --ring: 15 65% 50%;
+  --input: 35 20% 87%;
+  --ring: 22 95% 48%;
 
-  --chart-1: 15 65% 50%;
-  --chart-2: 35 85% 55%;
-  --chart-3: 180 30% 40%;
-  --chart-4: 340 40% 50%;
-  --chart-5: 45 90% 60%;
+  --chart-1: 22 95% 48%;
+  --chart-2: 43 98% 50%;
+  --chart-3: 160 60% 35%;
+  --chart-4: 340 70% 50%;
+  --chart-5: 55 95% 55%;
 
   --app-font-sans: 'Plus Jakarta Sans', sans-serif;
   --app-font-serif: 'Playfair Display', serif;
@@ -161,29 +161,29 @@
   --popover-foreground: 40 33% 96%;
   --popover-border: 24 20% 20%;
 
-  --primary: 15 65% 50%;
+  --primary: 22 95% 55%;
   --primary-foreground: 0 0% 100%;
   
-  --secondary: 35 85% 55%;
-  --secondary-foreground: 24 30% 20%;
+  --secondary: 43 98% 55%;
+  --secondary-foreground: 20 35% 15%;
   
   --muted: 24 20% 20%;
-  --muted-foreground: 35 25% 80%;
+  --muted-foreground: 35 25% 75%;
   
-  --accent: 35 85% 55%;
-  --accent-foreground: 24 30% 20%;
+  --accent: 43 98% 55%;
+  --accent-foreground: 20 35% 15%;
 
-  --destructive: 0 60% 40%;
+  --destructive: 0 70% 50%;
   --destructive-foreground: 0 0% 100%;
 
   --input: 24 20% 25%;
-  --ring: 15 65% 50%;
+  --ring: 22 95% 55%;
   
-  --chart-1: 15 65% 50%;
-  --chart-2: 35 85% 55%;
-  --chart-3: 180 30% 40%;
-  --chart-4: 340 40% 50%;
-  --chart-5: 45 90% 60%;
+  --chart-1: 22 95% 55%;
+  --chart-2: 43 98% 55%;
+  --chart-3: 160 60% 40%;
+  --chart-4: 340 70% 55%;
+  --chart-5: 55 95% 60%;
 }
 
 @layer base {
