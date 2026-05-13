@@ -79,7 +79,7 @@ export default function Donate() {
   const selectedAmount = form.watch("amount");
 
   return (
-    <div className="animate-in fade-in duration-500">
+    <div className="animate-in fade-in duration-500 min-h-screen flex flex-col">
       {/* Page Header */}
       <div className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground py-12 md:py-16 px-4">
         <div className="container max-w-6xl mx-auto">
@@ -91,8 +91,8 @@ export default function Donate() {
         </div>
       </div>
 
-      <div className="container max-w-6xl px-4 py-12 md:py-16">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+      <div className="container max-w-6xl mx-auto px-4 py-12 md:py-16 flex-1">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
           {/* Left — Cause Info */}
           <div className="lg:col-span-5 space-y-6">
             <div className="bg-card border-2 border-primary/20 rounded-2xl p-6 shadow-sm">
@@ -147,8 +147,8 @@ export default function Donate() {
             <div className="flex items-start gap-3 p-4 bg-amber-50 border border-amber-200 rounded-xl">
               <BadgeIndianRupee className="w-5 h-5 text-amber-700 shrink-0 mt-0.5" />
               <div>
-                <p className="font-semibold text-amber-800 text-sm mb-0.5">80G Tax Benefit</p>
-                <p className="text-amber-700 text-xs leading-relaxed">Your donation is eligible for tax exemption under Section 80G of the Income Tax Act, 1961.</p>
+                <p className="font-semibold text-amber-800 text-sm mb-0.5">80G — Application in Progress</p>
+                <p className="text-amber-700 text-xs leading-relaxed">We are applying for 80G tax exemption. An updated receipt will be issued to all donors once approved.</p>
               </div>
             </div>
           </div>

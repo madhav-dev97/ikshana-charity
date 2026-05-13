@@ -74,11 +74,11 @@ export default function Donors() {
             ))}
           </div>
         ) : (
-          <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
+          <div className="columns-1 md:columns-2 lg:columns-3 gap-6">
             {sortedDonors.map((donor, idx) => (
               <div
                 key={donor.id}
-                className="break-inside-avoid animate-in slide-in-from-bottom-4 fill-mode-both"
+                className="break-inside-avoid mb-6 animate-in slide-in-from-bottom-4 fill-mode-both"
                 style={{ animationDelay: `${Math.min(idx * 50, 1000)}ms` }}
               >
                 <Card className="rounded-2xl border-border/60 shadow-sm hover:shadow-lg transition-all bg-card h-full hover:border-primary/30">

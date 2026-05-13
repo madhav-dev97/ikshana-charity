@@ -17,32 +17,32 @@ export default function Home() {
   return (
     <div className="flex flex-col w-full animate-in fade-in duration-700">
       {/* Hero Section */}
-      <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden">
+      <section className="relative flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img
             src={heroBg}
             alt="IKSHANA CHARITABLE TRUST"
-            className="w-full h-full object-cover object-center"
+            className="w-full h-full object-cover object-top"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/75 to-background/20" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-background/95" />
         </div>
 
-        <div className="container relative z-10 px-4 py-24 md:py-32 flex flex-col items-center text-center">
+        <div className="container relative z-10 px-4 pt-20 pb-16 md:pt-28 md:pb-20 flex flex-col items-center text-center">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary text-primary-foreground mb-8 animate-in slide-in-from-bottom-4 duration-700 delay-100 fill-mode-both shadow-lg">
             <Heart className="w-4 h-4 fill-current" />
             <span className="text-sm font-semibold tracking-wide">IKSHANA CHARITABLE TRUST</span>
           </div>
 
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif font-bold text-foreground max-w-4xl tracking-tight leading-[1.1] mb-4 animate-in slide-in-from-bottom-6 duration-700 delay-200 fill-mode-both">
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif font-bold text-white max-w-4xl tracking-tight leading-[1.1] mb-4 animate-in slide-in-from-bottom-6 duration-700 delay-200 fill-mode-both drop-shadow-lg">
             Manava Seve,<br />
-            <span className="text-primary italic">Madhava Seva.</span>
+            <span className="text-secondary italic">Madhava Seva.</span>
           </h1>
 
-          <p className="text-base md:text-lg text-muted-foreground max-w-xl mb-3 animate-in slide-in-from-bottom-7 duration-700 delay-250 fill-mode-both font-medium">
+          <p className="text-base md:text-lg text-white/80 max-w-xl mb-3 animate-in slide-in-from-bottom-7 duration-700 delay-250 fill-mode-both font-medium">
             Service to Man is Service to God.
           </p>
 
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mb-12 leading-relaxed animate-in slide-in-from-bottom-8 duration-700 delay-300 fill-mode-both">
+          <p className="text-lg md:text-xl text-white/70 max-w-2xl mb-10 leading-relaxed animate-in slide-in-from-bottom-8 duration-700 delay-300 fill-mode-both">
             Join thousands across India supporting one meaningful cause every month.
             Together, small acts of giving create lasting, monumental change.
           </p>
@@ -166,7 +166,7 @@ export default function Home() {
 
       {/* Trust Section */}
       <section className="py-24 bg-card">
-        <div className="container px-4 max-w-4xl">
+        <div className="container px-4 max-w-5xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div>
               <div className="w-12 h-1 bg-primary mb-6 rounded-full"></div>
