@@ -11,6 +11,7 @@ import Donors from "@/pages/donors";
 import Donate from "@/pages/donate";
 import Receipt from "@/pages/receipt";
 import About from "@/pages/about";
+import Admin from "@/pages/admin";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -31,6 +32,7 @@ function Router() {
         <Route path="/donate" component={Donate} />
         <Route path="/receipt" component={Receipt} />
         <Route path="/about" component={About} />
+        <Route path="/admin" component={Admin} />
         <Route component={NotFound} />
       </Switch>
     </MainLayout>

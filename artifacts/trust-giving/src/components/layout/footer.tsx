@@ -42,6 +42,7 @@ export function Footer() {
               <li><Link href="/about" className="hover:text-primary transition-colors">Registration Details</Link></li>
               <li><a href="mailto:ikshanacharitabletrust@gmail.com" className="hover:text-primary transition-colors">Contact</a></li>
               <li><a href="#" className="hover:text-primary transition-colors">Privacy Policy</a></li>
+              <li><Link href="/admin" className="hover:text-primary transition-colors text-muted-foreground/50 text-xs">Admin</Link></li>
             </ul>
           </div>
         </div>

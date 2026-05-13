@@ -4,7 +4,7 @@ import { Heart, ArrowRight, Users, Target, Activity, ShieldCheck } from "lucide-
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
-import heroBg from "@/assets/images/hero-bg.png";
+import heroBg from "@/assets/images/hero-bg.jpg";
 
 function formatINR(amount: number) {
   return "₹" + amount.toLocaleString("en-IN");
