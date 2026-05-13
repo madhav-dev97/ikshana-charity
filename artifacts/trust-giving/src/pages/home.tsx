@@ -118,9 +118,9 @@ export default function Home() {
       </section>
 
       {/* Impact Stats */}
-      <section className="py-24 bg-primary text-primary-foreground">
-        <div className="container px-4">
-          <div className="text-center mb-16">
+      <section className="py-20 bg-primary text-primary-foreground">
+        <div className="container max-w-5xl mx-auto px-4">
+          <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-serif font-bold mb-4">Our Collective Impact</h2>
             <p className="text-primary-foreground/80 max-w-2xl mx-auto">
               Every rupee donated is a step towards a better India. We believe in complete transparency and celebrate our community's generosity together.
@@ -128,37 +128,33 @@ export default function Home() {
           </div>
 
           {loadingStats ? (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {[1, 2, 3].map(i => (
-                <div key={i} className="p-8 rounded-2xl bg-primary-foreground/10 flex flex-col items-center justify-center h-48">
-                  <Skeleton className="h-12 w-32 mb-4 bg-primary-foreground/20" />
+                <div key={i} className="h-52 rounded-2xl bg-primary-foreground/10 flex flex-col items-center justify-center gap-4 p-8">
+                  <Skeleton className="h-10 w-10 rounded-full bg-primary-foreground/20" />
+                  <Skeleton className="h-10 w-36 bg-primary-foreground/20" />
                   <Skeleton className="h-4 w-24 bg-primary-foreground/20" />
                 </div>
               ))}
             </div>
           ) : stats ? (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-              <div className="p-8 rounded-2xl bg-primary-foreground/10 border border-primary-foreground/20 flex flex-col items-center justify-center text-center group hover:bg-primary-foreground/20 transition-all">
-                <div className="bg-primary-foreground/20 p-4 rounded-full mb-4 group-hover:scale-110 transition-transform">
-                  <Activity className="w-8 h-8" />
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {[
+                { icon: Activity, value: formatINR(stats.totalRaised), label: "Total Raised" },
+                { icon: Users,    value: stats.totalDonors.toLocaleString("en-IN"), label: "Generous Donors" },
+                { icon: Target,   value: String(stats.activeCauses || 6), label: "Causes Supported" },
+              ].map(({ icon: Icon, value, label }) => (
+                <div
+                  key={label}
+                  className="h-52 p-8 rounded-2xl bg-primary-foreground/10 border border-primary-foreground/20 flex flex-col items-center justify-center text-center gap-3 group hover:bg-primary-foreground/20 transition-all"
+                >
+                  <div className="bg-primary-foreground/20 p-3 rounded-full group-hover:scale-110 transition-transform shrink-0">
+                    <Icon className="w-7 h-7" />
+                  </div>
+                  <h3 className="text-4xl md:text-5xl font-bold leading-none">{value}</h3>
+                  <p className="text-primary-foreground/70 font-medium uppercase tracking-widest text-xs">{label}</p>
                 </div>
-                <h3 className="text-4xl md:text-5xl font-bold mb-2">{formatINR(stats.totalRaised)}</h3>
-                <p className="text-primary-foreground/70 font-medium uppercase tracking-widest text-sm">Total Raised</p>
-              </div>
-              <div className="p-8 rounded-2xl bg-primary-foreground/10 border border-primary-foreground/20 flex flex-col items-center justify-center text-center group hover:bg-primary-foreground/20 transition-all">
-                <div className="bg-primary-foreground/20 p-4 rounded-full mb-4 group-hover:scale-110 transition-transform">
-                  <Users className="w-8 h-8" />
-                </div>
-                <h3 className="text-4xl md:text-5xl font-bold mb-2">{stats.totalDonors.toLocaleString("en-IN")}</h3>
-                <p className="text-primary-foreground/70 font-medium uppercase tracking-widest text-sm">Donors</p>
-              </div>
-              <div className="p-8 rounded-2xl bg-primary-foreground/10 border border-primary-foreground/20 flex flex-col items-center justify-center text-center group hover:bg-primary-foreground/20 transition-all">
-                <div className="bg-primary-foreground/20 p-4 rounded-full mb-4 group-hover:scale-110 transition-transform">
-                  <Target className="w-8 h-8" />
-                </div>
-                <h3 className="text-4xl md:text-5xl font-bold mb-2">{stats.activeCauses || 6}</h3>
-                <p className="text-primary-foreground/70 font-medium uppercase tracking-widest text-sm">Causes Supported</p>
-              </div>
+              ))}
             </div>
           ) : null}
         </div>
