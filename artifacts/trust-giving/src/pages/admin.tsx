@@ -3,7 +3,8 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   LayoutDashboard, Users, Target, Activity, IndianRupee,
   CheckCircle2, Circle, Pencil, Check, X, ShieldAlert, LogOut,
-  TrendingUp, Calendar, BadgeCheck
+  TrendingUp, Calendar, BadgeCheck, Mail, MessageSquare, Send,
+  Wifi, WifiOff, Bell
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -113,6 +114,22 @@ type Stats = {
   activeCauses: number;
 };
 
+type NotificationStatus = {
+  email: boolean;
+  whatsapp: boolean;
+  sms: boolean;
+};
+
+type ReminderResult = {
+  success: boolean;
+  causeTitle: string;
+  totalDonors: number;
+  emailSent: number;
+  whatsappSent: number;
+  smsSent: number;
+  skipped: number;
+};
+
 function EditGoalModal({
   cause,
   onClose,
@@ -159,6 +176,7 @@ function EditGoalModal({
 function AdminDashboard({ onLock }: { onLock: () => void }) {
   const qc = useQueryClient();
   const [editingCause, setEditingCause] = useState<Cause | null>(null);
+  const [reminderResult, setReminderResult] = useState<ReminderResult | null>(null);
 
   const { data: stats } = useQuery<Stats>({
     queryKey: ["admin-stats"],
@@ -175,6 +193,11 @@ function AdminDashboard({ onLock }: { onLock: () => void }) {
     queryFn: () => apiFetch("/donors"),
   });
 
+  const { data: notifStatus } = useQuery<NotificationStatus>({
+    queryKey: ["admin-notif-status"],
+    queryFn: () => apiFetch("/admin/notification-status"),
+  });
+
   const patchCause = useMutation({
     mutationFn: ({ id, data }: { id: number; data: Record<string, unknown> }) =>
       apiFetch(`/causes/${id}`, { method: "PATCH", body: JSON.stringify(data) }),
@@ -183,6 +206,11 @@ function AdminDashboard({ onLock }: { onLock: () => void }) {
       qc.invalidateQueries({ queryKey: ["admin-stats"] });
       setEditingCause(null);
     },
+  });
+
+  const sendReminders = useMutation({
+    mutationFn: () => apiFetch("/admin/send-reminders", { method: "POST" }),
+    onSuccess: (data: ReminderResult) => setReminderResult(data),
   });
 
   function setAsCurrent(cause: Cause) {
@@ -221,6 +249,67 @@ function AdminDashboard({ onLock }: { onLock: () => void }) {
       </div>
 
       <div className="container mx-auto px-4 py-8 space-y-8">
+
+        {/* Notification Status + Reminders */}
+        <div className="bg-background rounded-xl border p-6">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+            <div className="flex items-center gap-2 shrink-0">
+              <Bell className="w-5 h-5 text-primary" />
+              <h2 className="font-serif font-bold text-lg">Notifications</h2>
+            </div>
+            <div className="flex flex-wrap gap-2 flex-1">
+              {[
+                { key: "email", icon: Mail, label: "Email (Gmail)" },
+                { key: "whatsapp", icon: MessageSquare, label: "WhatsApp" },
+                { key: "sms", icon: MessageSquare, label: "SMS" },
+              ].map(({ key, icon: Icon, label }) => {
+                const active = notifStatus?.[key as keyof NotificationStatus];
+                return (
+                  <div key={key} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border ${active ? "bg-emerald-50 border-emerald-200 text-emerald-700 dark:bg-emerald-900/30 dark:border-emerald-700 dark:text-emerald-400" : "bg-muted border-muted-foreground/20 text-muted-foreground"}`}>
+                    {active ? <Wifi className="w-3 h-3" /> : <WifiOff className="w-3 h-3" />}
+                    <Icon className="w-3 h-3" />
+                    {label}
+                  </div>
+                );
+              })}
+            </div>
+            <Button
+              className="shrink-0 gap-2"
+              onClick={() => { setReminderResult(null); sendReminders.mutate(); }}
+              disabled={sendReminders.isPending}
+            >
+              <Send className="w-4 h-4" />
+              {sendReminders.isPending ? "Sending…" : "Send Monthly Reminders"}
+            </Button>
+          </div>
+
+          {reminderResult && (
+            <div className="mt-4 p-4 rounded-lg bg-emerald-50 border border-emerald-200 dark:bg-emerald-900/20 dark:border-emerald-700">
+              <p className="text-sm font-semibold text-emerald-800 dark:text-emerald-300 mb-2">
+                ✅ Reminders sent for: {reminderResult.causeTitle}
+              </p>
+              <div className="flex flex-wrap gap-4 text-xs text-emerald-700 dark:text-emerald-400">
+                <span>👥 {reminderResult.totalDonors} unique donors</span>
+                <span>📧 {reminderResult.emailSent} emails</span>
+                <span>💬 {reminderResult.whatsappSent} WhatsApp</span>
+                <span>📱 {reminderResult.smsSent} SMS</span>
+                {reminderResult.skipped > 0 && <span className="text-amber-600">⚠️ {reminderResult.skipped} skipped (no contact)</span>}
+              </div>
+            </div>
+          )}
+
+          {sendReminders.isError && (
+            <div className="mt-4 p-3 rounded-lg bg-red-50 border border-red-200 text-sm text-red-700">
+              Failed to send reminders. Please check the server logs.
+            </div>
+          )}
+
+          {!(notifStatus?.email || notifStatus?.whatsapp || notifStatus?.sms) && (
+            <p className="mt-3 text-xs text-muted-foreground">
+              No notification channels configured yet. Add credentials in environment secrets to enable email and WhatsApp.
+            </p>
+          )}
+        </div>
 
         {/* Stats Overview */}
         <div>

@@ -1,7 +1,10 @@
 import { Router } from "express";
 import { db, donationsTable, causesTable } from "@workspace/db";
-import { eq, and, desc, sql } from "drizzle-orm";
+import { eq, and, desc, sql, isNotNull } from "drizzle-orm";
 import { CreateDonationBody } from "@workspace/api-zod";
+import { sendDonationConfirmation } from "../lib/email";
+import { sendDonationWhatsApp, sendDonationSMS, sendReminderWhatsApp, sendReminderSMS } from "../lib/whatsapp";
+import { sendMonthlyReminder } from "../lib/email";
 
 const router = Router();
 
@@ -108,7 +111,7 @@ router.post("/donations", async (req, res) => {
 
     const monthName = MONTH_NAMES[(cause.month ?? 1) - 1];
 
-    res.status(201).json({
+    const responsePayload = {
       receiptId: donation.id,
       receiptNumber: donation.receiptNumber,
       donorName: donation.donorName,
@@ -120,6 +123,40 @@ router.post("/donations", async (req, res) => {
       message: donation.message ?? null,
       trustName: "IKSHANA CHARITABLE TRUST",
       taxExemptStatus: "This trust is registered under the Indian Trusts Act (Trust Reg. No. 242/2023, Telangana). An application for 80G tax exemption is currently in progress with the Income Tax Department. An updated receipt will be issued once approved.",
+    };
+
+    res.status(201).json(responsePayload);
+
+    setImmediate(async () => {
+      if (donation.email) {
+        await sendDonationConfirmation({
+          donorName: donation.donorName,
+          email: donation.email,
+          amount: parseFloat(donation.amount),
+          causeTitle: cause.title,
+          receiptNumber: donation.receiptNumber,
+          donatedAt: donation.donatedAt.toISOString(),
+          message: donation.message ?? null,
+        });
+      }
+
+      if (donation.phone) {
+        const waOk = await sendDonationWhatsApp({
+          phone: donation.phone,
+          donorName: donation.donorName,
+          amount: parseFloat(donation.amount),
+          causeTitle: cause.title,
+          receiptNumber: donation.receiptNumber,
+        });
+        if (!waOk) {
+          await sendDonationSMS({
+            phone: donation.phone,
+            donorName: donation.donorName,
+            amount: parseFloat(donation.amount),
+            receiptNumber: donation.receiptNumber,
+          });
+        }
+      }
     });
   } catch (err) {
     console.error(err);
