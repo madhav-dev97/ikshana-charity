@@ -24,7 +24,7 @@ export default function Home() {
             alt="IKSHANA CHARITABLE TRUST"
             className="w-full h-full object-cover object-top"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-background/95" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/65 to-background/95" />
         </div>
 
         <div className="container relative z-10 px-4 pt-20 pb-16 md:pt-28 md:pb-20 flex flex-col items-center text-center">
@@ -38,11 +38,11 @@ export default function Home() {
             <span className="text-secondary italic">Madhava Seva.</span>
           </h1>
 
-          <p className="text-base md:text-lg text-white/80 max-w-xl mb-3 animate-in slide-in-from-bottom-7 duration-700 delay-250 fill-mode-both font-medium">
+          <p className="text-base md:text-lg text-white max-w-xl mb-3 animate-in slide-in-from-bottom-7 duration-700 delay-250 fill-mode-both font-semibold drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
             Service to Man is Service to God.
           </p>
 
-          <p className="text-lg md:text-xl text-white/70 max-w-2xl mb-10 leading-relaxed animate-in slide-in-from-bottom-8 duration-700 delay-300 fill-mode-both">
+          <p className="text-lg md:text-xl text-white/95 max-w-2xl mb-10 leading-relaxed animate-in slide-in-from-bottom-8 duration-700 delay-300 fill-mode-both drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] font-medium">
             Join thousands across India supporting one meaningful cause every month.
             Together, small acts of giving create lasting, monumental change.
           </p>

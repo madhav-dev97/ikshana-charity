@@ -17,7 +17,7 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+      <div className="w-full px-6 h-16 flex items-center justify-between max-w-screen-2xl mx-auto">
         <Link href="/" className="flex items-center gap-2.5 group">
           <div className="bg-primary text-primary-foreground p-1.5 rounded-md group-hover:scale-110 transition-transform">
             <Heart className="w-5 h-5 fill-current" />
