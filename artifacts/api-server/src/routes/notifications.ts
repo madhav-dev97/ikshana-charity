@@ -18,7 +18,7 @@ router.post("/admin/send-reminders", async (req, res) => {
       return res.status(404).json({ error: "No active cause found" });
     }
 
-    const siteUrl = process.env.SITE_URL || "https://your-site.replit.app";
+    const siteUrl = process.env.SITE_URL || "https://example.com";
 
     const allDonations = await db
       .select({
