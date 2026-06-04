@@ -5,8 +5,14 @@ import { CheckCircle2, Heart, ArrowLeft, Printer, Download } from "lucide-react"
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 
-function formatINR(amount: number) {
-  return "₹" + amount.toLocaleString("en-IN");
+function formatINR(amount?: number) {
+  return "₹" + (amount ?? 0).toLocaleString("en-IN");
+}
+
+function formatDateString(value?: string | null, dateFormat = "d MMMM yyyy") {
+  if (!value) return "Unknown date";
+  const parsed = new Date(value);
+  return Number.isFinite(parsed.getTime()) ? format(parsed, dateFormat) : "Unknown date";
 }
 
 export default function Receipt() {
@@ -113,8 +119,8 @@ export default function Receipt() {
               </div>
               <div className="sm:text-right">
                 <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Date of Donation</p>
-                <p className="font-semibold text-gray-900">{format(new Date(receipt.donatedAt), "d MMMM yyyy")}</p>
-                <p className="text-sm text-gray-500">{format(new Date(receipt.donatedAt), "h:mm a")}</p>
+                <p className="font-semibold text-gray-900">{formatDateString(receipt.donatedAt, "d MMMM yyyy")}</p>
+                <p className="text-sm text-gray-500">{formatDateString(receipt.donatedAt, "h:mm a")}</p>
               </div>
             </div>
 

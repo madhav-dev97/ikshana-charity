@@ -1,5 +1,18 @@
 import nodemailer from "nodemailer";
 
+function safeFormatINR(amount?: number) {
+  return "₹" + (amount ?? 0).toLocaleString("en-IN");
+}
+
+function safeFormatDate(value?: string | null) {
+  if (!value) return "Unknown date";
+  const parsed = new Date(value);
+  if (!Number.isFinite(parsed.getTime())) return "Unknown date";
+  return parsed.toLocaleDateString("en-IN", {
+    day: "numeric", month: "long", year: "numeric",
+  });
+}
+
 function getTransporter() {
   const user = process.env.GMAIL_USER;
   const pass = process.env.GMAIL_APP_PASSWORD;
@@ -28,10 +41,8 @@ export async function sendDonationConfirmation(data: DonationEmailData): Promise
   }
 
   const fromEmail = process.env.GMAIL_USER!;
-  const amountFormatted = "₹" + data.amount.toLocaleString("en-IN");
-  const dateFormatted = new Date(data.donatedAt).toLocaleDateString("en-IN", {
-    day: "numeric", month: "long", year: "numeric",
-  });
+  const amountFormatted = safeFormatINR(data.amount);
+  const dateFormatted = safeFormatDate(data.donatedAt);
 
   const html = `
 <!DOCTYPE html>
@@ -142,8 +153,8 @@ export async function sendMonthlyReminder(opts: {
 
   const fromEmail = process.env.GMAIL_USER!;
   const pct = Math.min((opts.raisedAmount / opts.goalAmount) * 100, 100).toFixed(0);
-  const goal = "₹" + opts.goalAmount.toLocaleString("en-IN");
-  const raised = "₹" + opts.raisedAmount.toLocaleString("en-IN");
+  const goal = safeFormatINR(opts.goalAmount);
+  const raised = safeFormatINR(opts.raisedAmount);
 
   const html = `
 <!DOCTYPE html>

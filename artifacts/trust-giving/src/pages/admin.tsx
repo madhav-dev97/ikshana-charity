@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { format } from "date-fns";
 import {
   LayoutDashboard, Users, Target, Activity, IndianRupee,
   CheckCircle2, Circle, Pencil, Check, X, ShieldAlert, LogOut,
@@ -19,8 +20,14 @@ const MONTH_NAMES = [
   "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
 ];
 
-function formatINR(amount: number) {
-  return "₹" + amount.toLocaleString("en-IN");
+function formatINR(amount?: number) {
+  return "₹" + (amount ?? 0).toLocaleString("en-IN");
+}
+
+function formatDateString(value?: string | null, dateFormat = "dd MMM yyyy") {
+  if (!value) return "Unknown date";
+  const parsed = new Date(value);
+  return Number.isFinite(parsed.getTime()) ? format(parsed, dateFormat) : "Unknown date";
 }
 
 async function apiFetch(path: string, opts?: RequestInit) {
@@ -491,11 +498,7 @@ function AdminDashboard({ onLock }: { onLock: () => void }) {
                     </td>
                     <td className="px-6 py-3.5 text-right hidden sm:table-cell">
                       <span className="text-muted-foreground text-xs">
-                        {new Date(donor.donatedAt).toLocaleDateString("en-IN", {
-                          day: "numeric",
-                          month: "short",
-                          year: "numeric",
-                        })}
+                        {formatDateString(donor.donatedAt, "dd MMM yyyy")}
                       </span>
                     </td>
                   </tr>

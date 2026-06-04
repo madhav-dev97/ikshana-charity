@@ -9,16 +9,44 @@ import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import defaultImageUrl from "@/assets/images/cause-edu.png";
 
-function formatINR(amount: number) {
-  return "₹" + amount.toLocaleString("en-IN");
+function formatINR(amount?: number) {
+  return "₹" + (amount ?? 0).toLocaleString("en-IN");
+}
+
+function formatCauseDate(year?: number, month?: number) {
+  const parsedYear = Number(year);
+  const parsedMonth = Number(month);
+  if (!Number.isFinite(parsedYear) || !Number.isFinite(parsedMonth)) {
+    return "Unknown month";
+  }
+
+  const date = new Date(parsedYear, parsedMonth - 1);
+  if (!Number.isFinite(date.getTime())) {
+    return "Unknown month";
+  }
+
+  return format(date, "MMMM yyyy");
+}
+
+function normalizeCauseYear(cause: { year?: number }) {
+  return Number.isFinite(Number(cause.year)) ? cause.year : 0;
+}
+
+function normalizeCauseMonth(cause: { month?: number }) {
+  return Number.isFinite(Number(cause.month)) ? cause.month : 0;
 }
 
 export default function Causes() {
   const { data: causes, isLoading, error } = useListCauses();
 
   const sortedCauses = causes ? [...causes].sort((a, b) => {
-    if (b.year !== a.year) return b.year - a.year;
-    return b.month - a.month;
+    const yearA = normalizeCauseYear(a);
+    const yearB = normalizeCauseYear(b);
+    if (yearB !== yearA) return yearB - yearA;
+
+    const monthA = normalizeCauseMonth(a);
+    const monthB = normalizeCauseMonth(b);
+    return monthB - monthA;
   }) : [];
 
   return (
@@ -63,7 +91,7 @@ export default function Causes() {
         {sortedCauses.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {sortedCauses.map((cause) => {
-              const date = new Date(cause.year, cause.month - 1);
+              const dateLabel = formatCauseDate(cause.year, cause.month);
               const isCurrent = cause.isCurrent;
               const progress = Math.min((cause.raisedAmount / cause.goalAmount) * 100, 100);
               const isFunded = cause.raisedAmount >= cause.goalAmount;
@@ -109,7 +137,7 @@ export default function Causes() {
                   <div className="flex flex-col flex-1 p-6">
                     <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3 font-medium">
                       <Calendar className="w-4 h-4" />
-                      {format(date, "MMMM yyyy")}
+                      {dateLabel}
                     </div>
 
                     <h3 className="text-xl font-serif font-bold mb-3 line-clamp-2">{cause.title}</h3>

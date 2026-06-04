@@ -6,13 +6,19 @@ import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import heroBg from "@/assets/images/hero-bg.jpg";
 
-function formatINR(amount: number) {
-  return "₹" + amount.toLocaleString("en-IN");
+function formatINR(amount?: number) {
+  return "₹" + (amount ?? 0).toLocaleString("en-IN");
 }
 
 export default function Home() {
   const { data: currentCause, isLoading: loadingCause } = useGetCurrentCause();
   const { data: stats, isLoading: loadingStats } = useGetStatsSummary();
+
+  const impactStats = {
+    totalRaised: stats?.totalRaised ?? 0,
+    totalDonors: stats?.totalDonors ?? 0,
+    activeCauses: stats?.activeCauses ?? 0,
+  };
 
   return (
     <div className="flex flex-col w-full animate-in fade-in duration-700">
@@ -137,12 +143,12 @@ export default function Home() {
                 </div>
               ))}
             </div>
-          ) : stats ? (
+          ) : (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {[
-                { icon: Activity, value: formatINR(stats.totalRaised), label: "Total Raised" },
-                { icon: Users,    value: stats.totalDonors.toLocaleString("en-IN"), label: "Generous Donors" },
-                { icon: Target,   value: String(stats.activeCauses || 6), label: "Causes Supported" },
+                { icon: Activity, value: formatINR(impactStats.totalRaised), label: "Total Raised" },
+                { icon: Users,    value: impactStats.totalDonors.toLocaleString("en-IN"), label: "Generous Donors" },
+                { icon: Target,   value: String(impactStats.activeCauses || 6), label: "Causes Supported" },
               ].map(({ icon: Icon, value, label }) => (
                 <div
                   key={label}
@@ -156,7 +162,7 @@ export default function Home() {
                 </div>
               ))}
             </div>
-          ) : null}
+          )}
         </div>
       </section>
 

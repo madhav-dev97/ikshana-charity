@@ -4,14 +4,22 @@ import { Heart, Quote, UserRound, Sparkles } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent } from "@/components/ui/card";
 
-function formatINR(amount: number) {
-  return "₹" + amount.toLocaleString("en-IN");
+function formatINR(amount?: number) {
+  return "₹" + (amount ?? 0).toLocaleString("en-IN");
+}
+
+function formatDateString(value?: string | null, dateFormat = "d MMM yyyy") {
+  if (!value) return "Unknown date";
+  const parsed = new Date(value);
+  return Number.isFinite(parsed.getTime()) ? format(parsed, dateFormat) : "Unknown date";
 }
 
 export default function Donors() {
   const { data: donors, isLoading } = useListDonors();
   const { data: stats } = useGetStatsSummary();
 
+  const totalDonors = stats?.totalDonors ?? 0;
+  const totalRaised = stats?.totalRaised ?? 0;
   const sortedDonors = donors ? [...donors].sort((a, b) => b.amount - a.amount) : [];
 
   return (
@@ -39,19 +47,17 @@ export default function Donors() {
             Every gift, regardless of size, creates profound and lasting change.
           </p>
 
-          {stats && (
-            <div className="mt-12 inline-flex items-center gap-8 px-8 py-4 rounded-full bg-primary-foreground/20 border border-primary-foreground/30 backdrop-blur-sm shadow-xl">
-              <div className="text-center">
-                <span className="block text-3xl font-bold text-primary-foreground">{stats.totalDonors.toLocaleString("en-IN")}</span>
-                <span className="text-xs uppercase tracking-wider text-primary-foreground/70 font-medium">Donors</span>
-              </div>
-              <div className="w-px h-10 bg-primary-foreground/30"></div>
-              <div className="text-center">
-                <span className="block text-3xl font-bold text-primary-foreground">{formatINR(stats.totalRaised)}</span>
-                <span className="text-xs uppercase tracking-wider text-primary-foreground/70 font-medium">Total Contributed</span>
-              </div>
+          <div className="mt-12 inline-flex items-center gap-8 px-8 py-4 rounded-full bg-primary-foreground/20 border border-primary-foreground/30 backdrop-blur-sm shadow-xl">
+            <div className="text-center">
+              <span className="block text-3xl font-bold text-primary-foreground">{totalDonors.toLocaleString("en-IN")}</span>
+              <span className="text-xs uppercase tracking-wider text-primary-foreground/70 font-medium">Donors</span>
             </div>
-          )}
+            <div className="w-px h-10 bg-primary-foreground/30"></div>
+            <div className="text-center">
+              <span className="block text-3xl font-bold text-primary-foreground">{formatINR(totalRaised)}</span>
+              <span className="text-xs uppercase tracking-wider text-primary-foreground/70 font-medium">Total Contributed</span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -89,14 +95,15 @@ export default function Donors() {
                           ? 'bg-muted text-muted-foreground'
                           : 'bg-primary text-primary-foreground'
                       }`}>
-                        {donor.isAnonymous
-                          ? <UserRound className="w-5 h-5" />
-                          : <span className="font-serif">{donor.name.charAt(0)}</span>
-                        }
+                        {donor.isAnonymous ? (
+                          <UserRound className="w-5 h-5" />
+                        ) : (
+                          <span className="font-serif">{donor.name?.charAt(0) || "?"}</span>
+                        )}
                       </div>
                       <div className="min-w-0">
                         <h3 className="font-semibold text-base leading-tight truncate">
-                          {donor.isAnonymous ? "Anonymous Donor" : donor.name}
+                          {donor.isAnonymous ? "Anonymous Donor" : donor.name || "Unnamed Donor"}
                         </h3>
                         <div className="flex items-center gap-1 text-xs text-muted-foreground font-medium mt-0.5 flex-wrap">
                           <span className="text-primary font-bold text-sm">{formatINR(donor.amount)}</span>
@@ -117,7 +124,7 @@ export default function Donors() {
 
                     {donor.donatedAt && (
                       <div className="mt-3 text-[10px] text-muted-foreground/60 text-right uppercase tracking-wider">
-                        {format(new Date(donor.donatedAt), "d MMM yyyy")}
+                        {formatDateString(donor.donatedAt, "d MMM yyyy")}
                       </div>
                     )}
                   </CardContent>
