@@ -26,9 +26,9 @@ router.get("/causes", async (req, res) => {
       beneficiaries: c.beneficiaries ?? null,
     }));
 
-    res.json(result);
+    return res.json(result);
   } catch (err) {
-    res.status(500).json({ error: "Failed to fetch causes" });
+    return res.status(500).json({ error: "Failed to fetch causes" });
   }
 });
 
@@ -44,7 +44,7 @@ router.get("/causes/current", async (req, res) => {
       return res.status(404).json({ error: "No current cause found" });
     }
 
-    res.json({
+    return res.json({
       id: cause.id,
       title: cause.title,
       description: cause.description,
@@ -59,7 +59,7 @@ router.get("/causes/current", async (req, res) => {
       beneficiaries: cause.beneficiaries ?? null,
     });
   } catch (err) {
-    res.status(500).json({ error: "Failed to fetch current cause" });
+    return res.status(500).json({ error: "Failed to fetch current cause" });
   }
 });
 
@@ -96,7 +96,7 @@ router.patch("/causes/:id", async (req, res) => {
 
     if (!updated) return res.status(404).json({ error: "Cause not found" });
 
-    res.json({
+    return res.json({
       id: updated.id,
       title: updated.title,
       description: updated.description,
@@ -112,7 +112,7 @@ router.patch("/causes/:id", async (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Failed to update cause" });
+    return res.status(500).json({ error: "Failed to update cause" });
   }
 });
 
@@ -129,7 +129,7 @@ router.get("/causes/:id", async (req, res) => {
 
     if (!cause) return res.status(404).json({ error: "Cause not found" });
 
-    res.json({
+    return res.json({
       id: cause.id,
       title: cause.title,
       description: cause.description,
@@ -144,7 +144,7 @@ router.get("/causes/:id", async (req, res) => {
       beneficiaries: cause.beneficiaries ?? null,
     });
   } catch (err) {
-    res.status(500).json({ error: "Failed to fetch cause" });
+    return res.status(500).json({ error: "Failed to fetch cause" });
   }
 });
 

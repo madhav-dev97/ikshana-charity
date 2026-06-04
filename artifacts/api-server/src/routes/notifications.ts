@@ -88,7 +88,7 @@ router.post("/admin/send-reminders", async (req, res) => {
       if (!notified) skipped++;
     }
 
-    res.json({
+    return res.json({
       success: true,
       causeTitle: currentCause.title,
       totalDonors: uniqueDonors.length,
@@ -99,12 +99,12 @@ router.post("/admin/send-reminders", async (req, res) => {
     });
   } catch (err) {
     console.error("[reminders]", err);
-    res.status(500).json({ error: "Failed to send reminders" });
+    return res.status(500).json({ error: "Failed to send reminders" });
   }
 });
 
 router.get("/admin/notification-status", async (_req, res) => {
-  res.json({
+  return res.json({
     email: !!(process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD),
     whatsapp: !!(process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN && process.env.TWILIO_WHATSAPP_FROM),
     sms: !!(process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN && process.env.TWILIO_SMS_FROM),

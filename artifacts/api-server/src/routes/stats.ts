@@ -36,7 +36,7 @@ router.get("/stats/summary", async (req, res) => {
       .select({ count: count(causesTable.id) })
       .from(causesTable);
 
-    res.json({
+    return res.json({
       totalDonations: totals.totalDonations ?? 0,
       totalDonors: donors.length,
       totalRaised: parseFloat(totals.totalRaised ?? "0"),
@@ -46,7 +46,7 @@ router.get("/stats/summary", async (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Failed to fetch stats" });
+    return res.status(500).json({ error: "Failed to fetch stats" });
   }
 });
 
@@ -76,9 +76,9 @@ router.get("/stats/monthly", async (req, res) => {
 
     result.sort((a, b) => b.year - a.year || b.month - a.month);
 
-    res.json(result);
+    return res.json(result);
   } catch (err) {
-    res.status(500).json({ error: "Failed to fetch monthly stats" });
+    return res.status(500).json({ error: "Failed to fetch monthly stats" });
   }
 });
 

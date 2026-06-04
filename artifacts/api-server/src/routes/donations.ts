@@ -63,9 +63,9 @@ router.get("/donors", async (req, res) => {
       donatedAt: d.donatedAt?.toISOString() ?? new Date().toISOString(),
     }));
 
-    res.json(result);
+    return res.json(result);
   } catch (err) {
-    res.status(500).json({ error: "Failed to fetch donors" });
+    return res.status(500).json({ error: "Failed to fetch donors" });
   }
 });
 
@@ -125,7 +125,7 @@ router.post("/donations", async (req, res) => {
       taxExemptStatus: "This trust is registered under the Indian Trusts Act (Trust Reg. No. 242/2023, Telangana). An application for 80G tax exemption is currently in progress with the Income Tax Department. An updated receipt will be issued once approved.",
     };
 
-    res.status(201).json(responsePayload);
+    return res.status(201).json(responsePayload);
 
     setImmediate(async () => {
       if (donation.email) {
@@ -160,7 +160,7 @@ router.post("/donations", async (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Failed to process donation" });
+    return res.status(500).json({ error: "Failed to process donation" });
   }
 });
 
