@@ -29,11 +29,13 @@ function formatCauseDate(year?: number, month?: number) {
 }
 
 function normalizeCauseYear(cause: { year?: number }) {
-  return Number.isFinite(Number(cause.year)) ? cause.year : 0;
+  const year = Number(cause.year);
+  return Number.isFinite(year) ? year : 0;
 }
 
 function normalizeCauseMonth(cause: { month?: number }) {
-  return Number.isFinite(Number(cause.month)) ? cause.month : 0;
+  const month = Number(cause.month);
+  return Number.isFinite(month) ? month : 0;
 }
 
 export default function Causes() {

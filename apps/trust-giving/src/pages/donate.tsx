@@ -35,7 +35,8 @@ type DonationFormValues = z.infer<typeof donationSchema>;
 
 const PRESET_AMOUNTS = [500, 1000, 2500, 5000, 10000];
 
-function formatINR(amount: number) {
+function formatINR(amount: number | undefined) {
+  if (amount === undefined || amount === null) return "₹0";
   return "₹" + amount.toLocaleString("en-IN");
 }
 
@@ -76,7 +77,7 @@ export default function Donate() {
     );
   };
 
-  const selectedAmount = form.watch("amount");
+  const selectedAmount = form.watch("amount") ?? 1000;
 
   return (
     <div className="animate-in fade-in duration-500 min-h-screen flex flex-col">

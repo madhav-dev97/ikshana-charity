@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { DonationReceipt } from '@workspace/api-client-react/src/generated/api.schemas';
+import type { DonationReceipt } from '@workspace/api-client-react';
 
 interface DonationStore {
   latestReceipt: DonationReceipt | null;
