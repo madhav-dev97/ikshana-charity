@@ -30,9 +30,10 @@ minimumReleaseAge: 1440
 minimumReleaseAgeExclude: []
 
 packages:
-  - artifacts/*
-  - lib/*
-  - lib/integrations/*
+  - apps/*
+  - services/*
+  - dev/*
+  - libs/*
   - scripts
 
 catalog:

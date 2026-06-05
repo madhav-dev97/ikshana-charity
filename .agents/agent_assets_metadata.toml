@@ -3,24 +3,24 @@ outputs = []
 
 [[generated]]
 id = "c2T4Dj45uk5cOgzQ4LaJU"
-uri = "file://artifacts/trust-giving/src/assets/images/hero-bg.png"
+uri = "file://apps/trust-giving/src/assets/images/hero-bg.png"
 type = "image"
 title = "Sunlight through stained glass"
 
 [[generated]]
 id = "7abaF_MaKaJSXMS6Q8i_c"
-uri = "file://artifacts/trust-giving/src/assets/images/cause-edu.png"
+uri = "file://apps/trust-giving/src/assets/images/cause-edu.png"
 type = "image"
 title = "Children learning in classroom"
 
 [[generated]]
 id = "i_TK62VxwHgenyywp9z9h"
-uri = "file://artifacts/trust-giving/src/assets/images/cause-food.png"
+uri = "file://apps/trust-giving/src/assets/images/cause-food.png"
 type = "image"
 title = "Community food distribution"
 
 [[generated]]
 id = "p6iqM8ZaYIn1Q9wJ37aCD"
-uri = "file://artifacts/trust-giving/src/assets/images/cause-health.png"
+uri = "file://apps/trust-giving/src/assets/images/cause-health.png"
 type = "image"
 title = "Compassionate healthcare checkup"
