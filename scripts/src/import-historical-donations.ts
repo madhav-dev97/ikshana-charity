@@ -27,6 +27,18 @@ function monthName(month: number) {
     ][month - 1];
 }
 
+function parseAmount(raw: string): number {
+    const match = raw.match(/[\d,]+(?:\.\d+)?/);
+
+    if (!match) {
+        throw new Error(`Invalid amount: "${raw}"`);
+    }
+
+    return Number(
+        match[0].replace(/,/g, "")
+    );
+}
+
 type DonationRow = Record<
     "Title" | "Donated for:" | "Donation Date" | "Donation Amt",
     string | undefined
@@ -70,10 +82,8 @@ async function main() {
             .split("/")
             .map(Number);
 
-        const amount = Number(
-            getField(row, "Donation Amt")
-                .replace("₹", "")
-                .replace(/,/g, "")
+        const amount = parseAmount(
+            String(row["Donation Amt"] ?? "")
         );
 
         const key = `${cause}-${month}-${year}`;
@@ -138,10 +148,8 @@ async function main() {
             .split("/")
             .map(Number);
 
-        const amount = Number(
-            getField(row, "Donation Amt")
-                .replace("₹", "")
-                .replace(/,/g, "")
+        const amount = parseAmount(
+            String(row["Donation Amt"] ?? "")
         );
 
         const donatedAt = new Date(
