@@ -18,7 +18,9 @@ export const donationsTable = pgTable("donations", {
     scale: 2,
   }).notNull(),
 
-  causeId: integer("cause_id").notNull().references(() => causesTable.id),
+  causeId: integer("cause_id")
+    .notNull()
+    .references(() => causesTable.id),
 
   status: text("status").default("completed"),
 

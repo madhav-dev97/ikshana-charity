@@ -5,6 +5,7 @@ import { z } from "zod/v4";
 export const causesTable = pgTable("causes", {
   id: serial("id").primaryKey(),
   title: text("title").notNull(),
+  ngoName: text("ngo_name"),
   slug: text("slug").unique(),
   description: text("description").notNull(),
   month: integer("month").notNull(),
