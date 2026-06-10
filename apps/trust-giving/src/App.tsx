@@ -13,6 +13,9 @@ import Receipt from "@/pages/receipt";
 import About from "@/pages/about";
 import Admin from "@/pages/admin";
 
+import AdminLogin from "@/pages/admin-login";
+import ProtectedRoute from "./components/auth/protected-route";
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -32,7 +35,12 @@ function Router() {
         <Route path="/donate" component={Donate} />
         <Route path="/receipt" component={Receipt} />
         <Route path="/about" component={About} />
-        <Route path="/admin" component={Admin} />
+        <Route path="/admin-login" component={AdminLogin} />
+        <Route path="/admin">
+          <ProtectedRoute>
+            <Admin />
+          </ProtectedRoute>
+        </Route>
         <Route component={NotFound} />
       </Switch>
     </MainLayout>
