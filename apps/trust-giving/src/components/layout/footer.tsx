@@ -1,16 +1,22 @@
 import { Heart } from "lucide-react";
 import { Link } from "wouter";
+import { useSupabaseLogo } from "@/hooks/use-supabase-logo";
 
 export function Footer() {
+  const { logoUrl } = useSupabaseLogo();
   return (
     <footer className="border-t bg-card text-card-foreground">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="md:col-span-2 space-y-4">
             <Link href="/" className="flex items-center gap-2.5 inline-flex">
-              <div className="bg-primary text-primary-foreground p-1.5 rounded-md">
-                <Heart className="w-5 h-5 fill-current" />
-              </div>
+              {logoUrl ? (
+                <img src={logoUrl} alt="IKSHANA" className="w-12 h-12 object-contain" />
+              ) : (
+                <div className="bg-primary text-primary-foreground p-1.5 rounded-md">
+                  <Heart className="w-5 h-5 fill-current" />
+                </div>
+              )}
               <div className="flex flex-col leading-tight">
                 <span className="font-serif text-sm font-bold tracking-tight text-primary">IKSHANA CHARITABLE TRUST</span>
                 <span className="text-[10px] text-muted-foreground font-medium tracking-wide">Manava Seve, Madhava Seva</span>

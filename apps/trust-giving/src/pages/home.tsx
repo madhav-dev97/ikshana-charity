@@ -1,6 +1,7 @@
 import { useGetCurrentCause, useGetStatsSummary } from "@workspace/api-client-react";
 import { Link } from "wouter";
 import { Heart, ArrowRight, Users, Target, Activity, ShieldCheck } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -8,6 +9,34 @@ import heroBg from "@/assets/images/hero-bg.jpg";
 
 function formatINR(amount?: number) {
   return "₹" + (amount ?? 0).toLocaleString("en-IN");
+}
+
+function RotatingTitle() {
+  const [showSanskrit, setShowSanskrit] = useState(false);
+
+  useEffect(() => {
+    const id = setInterval(() => setShowSanskrit(s => !s), 3000);
+    return () => clearInterval(id);
+  }, []);
+
+  return (
+    <div className="relative w-full text-center">
+      <div className={`transition-opacity duration-700 ${showSanskrit ? "opacity-0" : "opacity-100"}`}>
+        Manava Seve,<br />
+        <span className="text-secondary italic">Madhava Seva.</span>
+      </div>
+
+      <div
+        className={`absolute inset-0 flex items-center justify-center transition-opacity duration-700 ${showSanskrit ? "opacity-100" : "opacity-0"}`}
+        aria-hidden={!showSanskrit}
+      >
+        <div style={{ fontFamily: "Noto Serif Devanagari, serif" }} className="leading-[1.05]">
+          मानव सेवा,<br />
+          <span className="text-secondary italic">माधव सेवा।</span>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default function Home() {
@@ -34,17 +63,13 @@ export default function Home() {
         </div>
 
         <div className="container relative z-10 px-4 pt-20 pb-16 md:pt-28 md:pb-20 flex flex-col items-center text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary text-primary-foreground mb-8 animate-in slide-in-from-bottom-4 duration-700 delay-100 fill-mode-both shadow-lg">
-            <Heart className="w-4 h-4 fill-current" />
-            <span className="text-sm font-semibold tracking-wide">IKSHANA CHARITABLE TRUST</span>
-          </div>
 
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif font-bold text-white max-w-4xl tracking-tight leading-[1.1] mb-4 animate-in slide-in-from-bottom-6 duration-700 delay-200 fill-mode-both drop-shadow-lg">
-            Manava Seve,<br />
-            <span className="text-secondary italic">Madhava Seva.</span>
+            {/* Rotating English <> Sanskrit (Devanagari) every 3s */}
+            <RotatingTitle />
           </h1>
 
-          <p className="text-base md:text-lg text-white max-w-xl mb-3 animate-in slide-in-from-bottom-7 duration-700 delay-250 fill-mode-both font-semibold drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
+          <p style={{ fontFamily: "Cormorant Garamond, Georgia, serif", fontStyle: "italic" }} className="text-xl md:text-2xl text-white max-w-xl mb-3 animate-in slide-in-from-bottom-7 duration-700 delay-250 fill-mode-both font-semibold drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
             Service to Man is Service to God.
           </p>
 
@@ -147,8 +172,8 @@ export default function Home() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {[
                 { icon: Activity, value: formatINR(impactStats.totalRaised), label: "Total Raised" },
-                { icon: Users,    value: impactStats.totalDonors.toLocaleString("en-IN"), label: "Generous Donors" },
-                { icon: Target,   value: String(impactStats.activeCauses || 6), label: "Causes Supported" },
+                { icon: Users, value: impactStats.totalDonors.toLocaleString("en-IN"), label: "Generous Donors" },
+                { icon: Target, value: String(impactStats.activeCauses || 6), label: "Causes Supported" },
               ].map(({ icon: Icon, value, label }) => (
                 <div
                   key={label}

@@ -1,8 +1,9 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { useDonationStore } from "@/store/donation-store";
 import { CheckCircle2, Heart, ArrowLeft, Printer, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useSupabaseLogo } from "@/hooks/use-supabase-logo";
 import { format } from "date-fns";
 
 function formatINR(amount?: number) {
@@ -19,6 +20,7 @@ export default function Receipt() {
   const [, setLocation] = useLocation();
   const receipt = useDonationStore((state) => state.latestReceipt);
   const receiptRef = useRef<HTMLDivElement>(null);
+  const { logoUrl } = useSupabaseLogo();
 
   useEffect(() => {
     if (!receipt) {
@@ -88,9 +90,13 @@ export default function Receipt() {
 
             {/* Logo row */}
             <div className="flex items-center justify-center gap-3 mb-4">
-              <div className="bg-primary-foreground/20 p-2 rounded-full print:border print:border-primary">
-                <Heart className="w-8 h-8 fill-current print:text-primary" />
-              </div>
+              {logoUrl ? (
+                <img src={logoUrl} alt="IKSHANA" className="h-12 object-contain" />
+              ) : (
+                <div className="bg-primary-foreground/20 p-2 rounded-full print:border print:border-primary">
+                  <Heart className="w-8 h-8 fill-current print:text-primary" />
+                </div>
+              )}
             </div>
 
             <h2 className="text-xs font-bold uppercase tracking-widest mb-1 text-primary-foreground/70 print:text-gray-500">Official Donation Receipt</h2>

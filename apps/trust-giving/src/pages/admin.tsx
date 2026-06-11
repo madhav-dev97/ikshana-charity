@@ -5,9 +5,10 @@ import {
   LayoutDashboard, Users, Target, Activity, IndianRupee,
   CheckCircle2, Circle, Pencil, Check, X, ShieldAlert, LogOut,
   TrendingUp, Calendar, BadgeCheck, Mail, MessageSquare, Send,
-  Wifi, WifiOff, Bell, Plus
+  Wifi, WifiOff, Bell, Plus, Heart
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import { useSupabaseLogo } from "@/hooks/use-supabase-logo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -366,6 +367,7 @@ function AdminDashboard() {
   const [editingCause, setEditingCause] = useState<Cause | null>(null);
   const [isCreatingCause, setIsCreatingCause] = useState(false);
   const [reminderResult, setReminderResult] = useState<ReminderResult | null>(null);
+  const { logoUrl } = useSupabaseLogo();
 
   const { data: stats } = useQuery<Stats>({
     queryKey: ["admin-stats"],
@@ -445,7 +447,11 @@ function AdminDashboard() {
       <div className="bg-background border-b sticky top-0 z-40">
         <div className="container mx-auto px-4 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <LayoutDashboard className="w-5 h-5 text-primary" />
+            {logoUrl ? (
+              <img src={logoUrl} alt="IKSHANA" className="h-10 object-contain" />
+            ) : (
+              <Heart className="w-5 h-5 text-primary" />
+            )}
             <span className="font-serif font-bold text-sm text-primary">Admin Dashboard</span>
             <span className="text-muted-foreground text-xs hidden sm:block">— IKSHANA CHARITABLE TRUST</span>
           </div>

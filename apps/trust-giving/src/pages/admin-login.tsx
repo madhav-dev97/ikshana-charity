@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
 import { supabase } from "@/lib/supabase";
+import { useSupabaseLogo } from "@/hooks/use-supabase-logo";
 
 export default function AdminLogin() {
     const [, navigate] = useLocation();
@@ -9,6 +10,7 @@ export default function AdminLogin() {
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    const { logoUrl } = useSupabaseLogo();
 
     async function handleLogin(e: React.FormEvent) {
         e.preventDefault();
@@ -35,17 +37,19 @@ export default function AdminLogin() {
     return (
         <div className="min-h-screen grid lg:grid-cols-2">
             <div className="hidden lg:flex flex-col justify-center items-center bg-green-700 text-white p-12">
-                <img
-                    src="/logo.png"
-                    alt="IKSHANA"
-                    className="h-28 mb-8"
-                />
+                {logoUrl && (
+                    <img
+                        src={logoUrl}
+                        alt="IKSHANA"
+                        className="h-40 w-60 mt-6"
+                    />
+                )}
 
-                <h1 className="text-4xl font-bold">
+                <h1 className="font-serif text-4xl font-semibold uppercase tracking-tight text-white/95">
                     IKSHANA CHARITABLE TRUST
                 </h1>
 
-                <p className="mt-4 text-lg text-center max-w-md">
+                <p className="mt-4 text-lg text-center max-w-md text-white/80 italic tracking-wide">
                     Every Contribution Creates Impact
                 </p>
 

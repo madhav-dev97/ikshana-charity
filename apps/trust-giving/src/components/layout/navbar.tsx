@@ -3,10 +3,12 @@ import { Heart, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { useSupabaseLogo } from "@/hooks/use-supabase-logo";
 
 export function Navbar() {
   const [location] = useLocation();
   const [isOpen, setIsOpen] = useState(false);
+  const { logoUrl } = useSupabaseLogo();
 
   const links = [
     { href: "/", label: "Home" },
@@ -18,13 +20,17 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="w-full px-6 h-16 flex items-center justify-between max-w-screen-2xl mx-auto">
-        <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="bg-primary text-primary-foreground p-1.5 rounded-md group-hover:scale-110 transition-transform">
-            <Heart className="w-5 h-5 fill-current" />
-          </div>
-          <div className="flex flex-col leading-tight">
-            <span className="font-serif text-sm font-bold tracking-tight text-primary leading-none">IKSHANA CHARITABLE TRUST</span>
-            <span className="text-[10px] text-muted-foreground font-medium tracking-wide">A Visionary of Kindness</span>
+        <Link href="/" className="flex items-center gap-1.9 group">
+          {logoUrl ? (
+            <img src={logoUrl} alt="IKSHANA" className="w-18 h-18 object-contain group-hover:scale-110 transition-transform" />
+          ) : (
+            <div className="bg-primary text-primary-foreground p-1.5 rounded-md group-hover:scale-110 transition-transform">
+              <Heart className="w-5 h-5 fill-current" />
+            </div>
+          )}
+          <div className="flex flex-col leading-4">
+            <span className="font-serif text-md font-bold tracking-normal text-primary leading-none">IKSHANA CHARITABLE TRUST</span>
+            <span className="text-[12px] text-black font-medium tracking-wide italic font-serif">A Visionary of Kindness</span>
           </div>
         </Link>
 
