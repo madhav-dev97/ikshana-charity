@@ -4,6 +4,7 @@ import { eq, desc, sql } from "drizzle-orm";
 import { CreateDonationBody, ListDonorsQueryParams } from "@workspace/api-zod";
 import { sendDonationConfirmation } from "../lib/email";
 import { sendDonationWhatsApp, sendDonationSMS } from "../lib/whatsapp";
+import { requireAdmin } from "../middlewares/require-admin";
 
 const router = Router();
 
@@ -61,7 +62,7 @@ router.get("/donors", async (req, res) => {
   }
 });
 
-router.post("/donations", async (req, res) => {
+router.post("/donations",   requireAdmin, async (req, res) => {
   try {
     const parsed = CreateDonationBody.safeParse(req.body);
     if (!parsed.success) {
@@ -103,7 +104,7 @@ router.post("/donations", async (req, res) => {
       .set({ raisedAmount: sql`${causesTable.raisedAmount} + ${String(amount)}` })
       .where(eq(causesTable.id, causeId));
 
-    res.status(201).json({
+    return res.status(201).json({
       receiptId: donation.id,
       receiptNumber,
       donorName,
@@ -129,10 +130,14 @@ router.post("/donations", async (req, res) => {
       }).catch((err) => console.error("[notifications] email error:", err));
     }
 
-    if (phone) {
-      sendDonationWhatsApp({ phone, donorName, amount, causeTitle: cause.title, receiptNumber })
+    if (typeof phone === "string") {
+      const phoneNumber = phone as string;
+      sendDonationWhatsApp({ phone: phoneNumber, donorName, amount, causeTitle: cause.title, receiptNumber })
         .then((sent) => {
-          if (!sent) return sendDonationSMS({ phone, donorName, amount, receiptNumber });
+          if (!sent) {
+            return sendDonationSMS({ phone: phoneNumber, donorName, amount, receiptNumber });
+          }
+          return undefined;
         })
         .catch((err) => console.error("[notifications] whatsapp/sms error:", err));
     }

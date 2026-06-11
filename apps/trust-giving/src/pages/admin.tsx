@@ -5,15 +5,16 @@ import {
   LayoutDashboard, Users, Target, Activity, IndianRupee,
   CheckCircle2, Circle, Pencil, Check, X, ShieldAlert, LogOut,
   TrendingUp, Calendar, BadgeCheck, Mail, MessageSquare, Send,
-  Wifi, WifiOff, Bell
+  Wifi, WifiOff, Bell, Plus
 } from "lucide-react";
+import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { Textarea } from "@/components/ui/textarea";
 
-const ADMIN_PIN = "IKSHANA2024";
-const API_BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
+const API_BASE = import.meta.env.VITE_API_URL;
 
 const MONTH_NAMES = [
   "Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -31,59 +32,22 @@ function formatDateString(value?: string | null, dateFormat = "dd MMM yyyy") {
 }
 
 async function apiFetch(path: string, opts?: RequestInit) {
+  const { data: { session } } = await supabase.auth.getSession();
+  const token = session?.access_token;
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+    ...((opts?.headers as Record<string, string>) || {}),
+  };
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
   const res = await fetch(`${API_BASE}/api${path}`, {
-    headers: { "Content-Type": "application/json" },
     ...opts,
+    headers,
   });
   if (!res.ok) throw new Error(`API error ${res.status}`);
   return res.json();
-}
-
-function PinGate({ onUnlock }: { onUnlock: () => void }) {
-  const [pin, setPin] = useState("");
-  const [error, setError] = useState(false);
-
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (pin === ADMIN_PIN) {
-      onUnlock();
-    } else {
-      setError(true);
-      setPin("");
-    }
-  }
-
-  return (
-    <div className="min-h-[80vh] flex items-center justify-center px-4">
-      <div className="w-full max-w-sm">
-        <div className="flex flex-col items-center gap-3 mb-8">
-          <div className="bg-primary/10 p-4 rounded-full">
-            <ShieldAlert className="w-10 h-10 text-primary" />
-          </div>
-          <h1 className="text-2xl font-serif font-bold">Admin Access</h1>
-          <p className="text-sm text-muted-foreground text-center">
-            Enter the admin PIN to manage IKSHANA CHARITABLE TRUST
-          </p>
-        </div>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <Input
-            type="password"
-            placeholder="Enter PIN"
-            value={pin}
-            onChange={(e) => { setPin(e.target.value); setError(false); }}
-            className={`text-center text-lg tracking-widest h-14 ${error ? "border-red-500 focus-visible:ring-red-500" : ""}`}
-            autoFocus
-          />
-          {error && (
-            <p className="text-sm text-red-500 text-center">Incorrect PIN. Try again.</p>
-          )}
-          <Button type="submit" className="w-full h-12 rounded-xl text-base font-semibold">
-            Unlock Dashboard
-          </Button>
-        </form>
-      </div>
-    </div>
-  );
 }
 
 type Cause = {
@@ -180,9 +144,227 @@ function EditGoalModal({
   );
 }
 
-function AdminDashboard({ onLock }: { onLock: () => void }) {
+function CreateCauseModal({
+  onClose,
+  onSave,
+  isPending,
+}: {
+  onClose: () => void;
+  onSave: (data: Record<string, any>) => void;
+  isPending: boolean;
+}) {
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [category, setCategory] = useState("Education");
+  const [month, setMonth] = useState(new Date().getMonth() + 1);
+  const [year, setYear] = useState(new Date().getFullYear());
+  const [goalAmount, setGoalAmount] = useState("");
+  const [ngoName, setNgoName] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
+  const [impact, setImpact] = useState("");
+  const [beneficiaries, setBeneficiaries] = useState("");
+  const [isCurrent, setIsCurrent] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrorMsg("");
+
+    if (!title.trim()) {
+      setErrorMsg("Title is required");
+      return;
+    }
+    if (!description.trim()) {
+      setErrorMsg("Description is required");
+      return;
+    }
+    const goal = parseFloat(goalAmount);
+    if (isNaN(goal) || goal <= 0) {
+      setErrorMsg("Goal Amount must be a positive number");
+      return;
+    }
+
+    onSave({
+      title: title.trim(),
+      description: description.trim(),
+      category,
+      month,
+      year,
+      goalAmount: goal,
+      ngoName: ngoName.trim() || undefined,
+      imageUrl: imageUrl.trim() || undefined,
+      impact: impact.trim() || undefined,
+      beneficiaries: beneficiaries.trim() || undefined,
+      isCurrent,
+    });
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 overflow-y-auto py-8">
+      <div className="bg-background rounded-2xl shadow-2xl p-6 w-full max-w-lg border my-auto">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="font-serif font-bold text-xl">Create New Campaign</h3>
+          <Button variant="ghost" size="sm" onClick={onClose} className="h-8 w-8 p-0">
+            <X className="w-4 h-4" />
+          </Button>
+        </div>
+
+        {errorMsg && (
+          <div className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-sm text-red-700">
+            {errorMsg}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-1 md:col-span-2">
+              <label className="text-sm font-medium">Campaign Title *</label>
+              <Input
+                type="text"
+                placeholder="e.g. Clean Drinking Water Initiative"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-sm font-medium">NGO / Partner Name</label>
+              <Input
+                type="text"
+                placeholder="NGO Name"
+                value={ngoName}
+                onChange={(e) => setNgoName(e.target.value)}
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-sm font-medium">Category *</label>
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+              >
+                <option value="Education">Education</option>
+                <option value="Healthcare">Healthcare</option>
+                <option value="Disaster Relief">Disaster Relief</option>
+                <option value="Environment">Environment</option>
+                <option value="Animal Welfare">Animal Welfare</option>
+                <option value="General Charity">General Charity</option>
+              </select>
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-sm font-medium">Target Month *</label>
+              <select
+                value={month}
+                onChange={(e) => setMonth(Number(e.target.value))}
+                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+              >
+                {MONTH_NAMES.map((name, index) => (
+                  <option key={name} value={index + 1}>
+                    {name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-sm font-medium">Target Year *</label>
+              <Input
+                type="number"
+                value={year}
+                onChange={(e) => setYear(Number(e.target.value))}
+                min={2000}
+                required
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-sm font-medium">Goal Amount (₹) *</label>
+              <Input
+                type="number"
+                placeholder="e.g. 150000"
+                value={goalAmount}
+                onChange={(e) => setGoalAmount(e.target.value)}
+                min={1}
+                required
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-sm font-medium">Beneficiaries Count (Optional)</label>
+              <Input
+                type="text"
+                placeholder="e.g. 500+ families"
+                value={beneficiaries}
+                onChange={(e) => setBeneficiaries(e.target.value)}
+              />
+            </div>
+
+            <div className="space-y-1 md:col-span-2">
+              <label className="text-sm font-medium">Image URL (Optional)</label>
+              <Input
+                type="url"
+                placeholder="https://example.com/image.jpg"
+                value={imageUrl}
+                onChange={(e) => setImageUrl(e.target.value)}
+              />
+            </div>
+
+            <div className="space-y-1 md:col-span-2">
+              <label className="text-sm font-medium">Campaign Description *</label>
+              <Textarea
+                placeholder="Provide details about the cause and what the funds will be used for..."
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                rows={3}
+                required
+              />
+            </div>
+
+            <div className="space-y-1 md:col-span-2">
+              <label className="text-sm font-medium">Expected Impact (Optional)</label>
+              <Textarea
+                placeholder="e.g. 50 water filters installed, 250 school kits distributed"
+                value={impact}
+                onChange={(e) => setImpact(e.target.value)}
+                rows={2}
+              />
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 pt-2">
+            <input
+              type="checkbox"
+              id="isCurrent"
+              checked={isCurrent}
+              onChange={(e) => setIsCurrent(e.target.checked)}
+              className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+            />
+            <label htmlFor="isCurrent" className="text-sm font-medium select-none">
+              Set as the current active campaign (deactivates others)
+            </label>
+          </div>
+
+          <div className="flex gap-3 pt-4">
+            <Button type="submit" className="flex-1" disabled={isPending}>
+              {isPending ? "Creating..." : "Create Campaign"}
+            </Button>
+            <Button variant="outline" type="button" className="flex-1" onClick={onClose} disabled={isPending}>
+              Cancel
+            </Button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+function AdminDashboard() {
   const qc = useQueryClient();
   const [editingCause, setEditingCause] = useState<Cause | null>(null);
+  const [isCreatingCause, setIsCreatingCause] = useState(false);
   const [reminderResult, setReminderResult] = useState<ReminderResult | null>(null);
 
   const { data: stats } = useQuery<Stats>({
@@ -203,6 +385,16 @@ function AdminDashboard({ onLock }: { onLock: () => void }) {
   const { data: notifStatus } = useQuery<NotificationStatus>({
     queryKey: ["admin-notif-status"],
     queryFn: () => apiFetch("/admin/notification-status"),
+  });
+
+  const createCause = useMutation({
+    mutationFn: (data: Record<string, unknown>) =>
+      apiFetch("/causes", { method: "POST", body: JSON.stringify(data) }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["admin-causes"] });
+      qc.invalidateQueries({ queryKey: ["admin-stats"] });
+      setIsCreatingCause(false);
+    },
   });
 
   const patchCause = useMutation({
@@ -231,12 +423,21 @@ function AdminDashboard({ onLock }: { onLock: () => void }) {
   const currentCause = causes.find((c) => c.isCurrent);
 
   return (
+
     <div className="min-h-screen bg-muted/30">
       {editingCause && (
         <EditGoalModal
           cause={editingCause}
           onClose={() => setEditingCause(null)}
           onSave={saveGoal}
+        />
+      )}
+
+      {isCreatingCause && (
+        <CreateCauseModal
+          onClose={() => setIsCreatingCause(false)}
+          onSave={(data) => createCause.mutate(data)}
+          isPending={createCause.isPending}
         />
       )}
 
@@ -248,9 +449,14 @@ function AdminDashboard({ onLock }: { onLock: () => void }) {
             <span className="font-serif font-bold text-sm text-primary">Admin Dashboard</span>
             <span className="text-muted-foreground text-xs hidden sm:block">— IKSHANA CHARITABLE TRUST</span>
           </div>
-          <Button variant="ghost" size="sm" onClick={onLock} className="text-muted-foreground hover:text-foreground gap-1">
-            <LogOut className="w-4 h-4" />
-            <span className="hidden sm:inline">Lock</span>
+          <Button
+            variant="ghost"
+            onClick={async () => {
+              await supabase.auth.signOut();
+              window.location.reload();
+            }}
+          >
+            Logout
           </Button>
         </div>
       </div>
@@ -382,10 +588,15 @@ function AdminDashboard({ onLock }: { onLock: () => void }) {
 
         {/* Causes Management */}
         <div className="bg-background rounded-xl border overflow-hidden">
-          <div className="px-6 py-4 border-b flex items-center gap-2">
-            <Target className="w-5 h-5 text-primary" />
-            <h2 className="font-serif font-bold text-lg">All Causes</h2>
-            <span className="text-xs text-muted-foreground ml-1">({causes.length})</span>
+          <div className="px-6 py-4 border-b flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Target className="w-5 h-5 text-primary" />
+              <h2 className="font-serif font-bold text-lg">All Causes</h2>
+              <span className="text-xs text-muted-foreground ml-1">({causes.length})</span>
+            </div>
+            <Button size="sm" onClick={() => setIsCreatingCause(true)} className="gap-1.5">
+              <Plus className="w-4 h-4" /> New Campaign
+            </Button>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -513,11 +724,5 @@ function AdminDashboard({ onLock }: { onLock: () => void }) {
 }
 
 export default function Admin() {
-  const [unlocked, setUnlocked] = useState(false);
-
-  if (!unlocked) {
-    return <PinGate onUnlock={() => setUnlocked(true)} />;
-  }
-
-  return <AdminDashboard onLock={() => setUnlocked(false)} />;
+  return <AdminDashboard />;
 }

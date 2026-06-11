@@ -3,10 +3,11 @@ import { db, donationsTable, causesTable } from "@workspace/db";
 import { eq, desc, isNotNull } from "drizzle-orm";
 import { sendMonthlyReminder } from "../lib/email";
 import { sendReminderWhatsApp, sendReminderSMS } from "../lib/whatsapp";
+import { requireAdmin } from "../middlewares/require-admin";
 
 const router = Router();
 
-router.post("/admin/send-reminders", async (req, res) => {
+router.post("/admin/send-reminders", requireAdmin, async (req, res) => {
   try {
     const [currentCause] = await db
       .select()

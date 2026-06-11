@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { db, causesTable } from "@workspace/db";
 import { eq, desc, and, sql } from "drizzle-orm";
+import { requireAdmin } from "../middlewares/require-admin";
 
 const router = Router();
 
@@ -63,10 +64,99 @@ router.get("/causes/current", async (req, res) => {
   }
 });
 
-router.patch("/causes/:id", async (req, res) => {
+router.post("/causes", requireAdmin, async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
-    if (isNaN(id)) return res.status(400).json({ error: "Invalid id" });
+    const {
+      title,
+      description,
+      category,
+      month,
+      year,
+      goalAmount,
+      ngoName,
+      imageUrl,
+      impact,
+      beneficiaries,
+      isCurrent,
+    } = req.body;
+
+    if (!title || !description || !category || month === undefined || year === undefined || !goalAmount) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    const m = parseInt(month);
+    const y = parseInt(year);
+    const goal = parseFloat(goalAmount);
+
+    if (isNaN(m) || m < 1 || m > 12) {
+      return res.status(400).json({ error: "Invalid month" });
+    }
+    if (isNaN(y) || y < 2000) {
+      return res.status(400).json({ error: "Invalid year" });
+    }
+    if (isNaN(goal) || goal <= 0) {
+      return res.status(400).json({ error: "Invalid goal amount" });
+    }
+
+    const slug = title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+
+    if (isCurrent === true) {
+      await db.update(causesTable).set({ isCurrent: false });
+    }
+
+    const [inserted] = await db
+      .insert(causesTable)
+      .values({
+        title,
+        description,
+        category,
+        month: m,
+        year: y,
+        goalAmount: String(goal),
+        raisedAmount: "0",
+        slug,
+        ngoName: ngoName || null,
+        imageUrl: imageUrl || null,
+        impact: impact || null,
+        beneficiaries: beneficiaries ? String(beneficiaries) : null,
+        isCurrent: isCurrent === true,
+      })
+      .returning();
+
+    return res.status(201).json({
+      id: inserted.id,
+      title: inserted.title,
+      description: inserted.description,
+      month: inserted.month,
+      year: inserted.year,
+      goalAmount: parseFloat(inserted.goalAmount),
+      raisedAmount: parseFloat(inserted.raisedAmount),
+      imageUrl: inserted.imageUrl ?? null,
+      category: inserted.category,
+      isCurrent: inserted.isCurrent,
+      impact: inserted.impact ?? null,
+      beneficiaries: inserted.beneficiaries ?? null,
+    });
+  } catch (err: any) {
+    console.error(err);
+    if (err.code === "23505") {
+      return res.status(400).json({ error: "A cause with a similar title already exists (duplicate slug)" });
+    }
+    return res.status(500).json({ error: "Failed to create cause" });
+  }
+});
+
+router.patch("/causes/:id", requireAdmin, async (req, res) => {
+  try {
+    const idParam = req.params.id;
+    if (typeof idParam !== "string" || !/^[0-9]+$/.test(idParam)) {
+      return res.status(400).json({ error: "Invalid id" });
+    }
+
+    const id = Number(idParam);
 
     const { title, description, goalAmount, isCurrent, impact, beneficiaries } = req.body;
 

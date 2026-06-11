@@ -14,7 +14,9 @@ router.get("/stats/summary", async (req, res) => {
       .from(donationsTable);
 
     const donors = await db
-      .selectDistinct({ email: donationsTable.email })
+      .selectDistinct({
+        donorName: donationsTable.donorName,
+      })
       .from(donationsTable);
 
     const [currentCause] = await db
