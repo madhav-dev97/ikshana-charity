@@ -13,6 +13,7 @@ import Donate from "@/pages/donate";
 import Receipt from "@/pages/receipt";
 import About from "@/pages/about";
 import Admin from "@/pages/admin";
+import CauseDetail from "@/pages/cause-detail";
 
 import AdminLogin from "@/pages/admin-login";
 import ProtectedRoute from "./components/auth/protected-route";
@@ -58,6 +59,7 @@ function Router() {
       <Switch>
         <Route path="/" component={Home} />
         <Route path="/causes" component={Causes} />
+        <Route path="/cause/:id" component={CauseDetail} />
         <Route path="/donors" component={Donors} />
         <Route path="/donate" component={Donate} />
         <Route path="/receipt" component={Receipt} />

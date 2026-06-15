@@ -7,7 +7,7 @@ import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import defaultImageUrl from "@/assets/images/cause-edu.png";
+import { supabase } from "@/lib/supabase";
 
 function formatINR(amount?: number) {
   return "₹" + (amount ?? 0).toLocaleString("en-IN");
@@ -50,6 +50,14 @@ export default function Causes() {
     const monthB = normalizeCauseMonth(b);
     return monthB - monthA;
   }) : [];
+
+  const getImageUrl = (path: string | null) => {
+    if (!path) return "/placeholder.jpg";
+
+    return supabase.storage
+      .from("campaigns")
+      .getPublicUrl(path).data.publicUrl;
+  };
 
   return (
     <div className="animate-in fade-in duration-500">
@@ -99,91 +107,100 @@ export default function Causes() {
               const isFunded = cause.raisedAmount >= cause.goalAmount;
 
               return (
-                <div
+                <Link
                   key={cause.id}
-                  className={`group flex flex-col rounded-2xl border bg-card shadow-sm hover:shadow-xl transition-all overflow-hidden ${
-                    isCurrent ? 'ring-2 ring-primary border-transparent' : ''
-                  }`}
+                  href={`/cause/${cause.id}`}
+                  className="block"
                 >
-                  <div className="relative h-56 overflow-hidden bg-muted">
-                    <img
-                      src={cause.imageUrl || defaultImageUrl}
-                      alt={cause.title}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = defaultImageUrl;
-                      }}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                  <div
+                    className={`group flex flex-col rounded-2xl border bg-card shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all overflow-hidden cursor-pointer ${isCurrent ? "ring-2 ring-primary border-transparent" : ""
+                      }`}
+                  >
+                    <div className="relative h-56 overflow-hidden bg-muted">
+                      <img
+                        src={getImageUrl(cause.imageUrl)}
+                        alt={cause.title}
+                        className="h-56 w-full object-cover"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
 
-                    <div className="absolute top-4 right-4 flex gap-2">
-                      {isCurrent && (
-                        <Badge className="bg-primary hover:bg-primary text-primary-foreground font-semibold px-3 shadow-md">
-                          Active This Month
-                        </Badge>
-                      )}
-                      {isFunded && !isCurrent && (
-                        <Badge className="bg-green-600 hover:bg-green-600 text-white font-semibold px-3 shadow-md">
-                          Fully Funded
-                        </Badge>
-                      )}
-                    </div>
-
-                    <div className="absolute bottom-4 left-4">
-                      <Badge variant="outline" className="text-white border-white/40 bg-black/40 backdrop-blur-md">
-                        {cause.category}
-                      </Badge>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col flex-1 p-6">
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3 font-medium">
-                      <Calendar className="w-4 h-4" />
-                      {dateLabel}
-                    </div>
-
-                    <h3 className="text-xl font-serif font-bold mb-3 line-clamp-2">{cause.title}</h3>
-                    <p className="text-muted-foreground text-sm flex-1 line-clamp-3 mb-6">
-                      {cause.description}
-                    </p>
-
-                    <div className="space-y-4 mt-auto">
-                      <div className="space-y-2">
-                        <div className="flex justify-between text-sm font-semibold">
-                          <span className="text-primary">{formatINR(cause.raisedAmount)} raised</span>
-                          <span className="text-muted-foreground flex items-center gap-1">
-                            <Target className="w-3 h-3" /> {formatINR(cause.goalAmount)}
-                          </span>
-                        </div>
-                        <Progress
-                          value={progress}
-                          className="h-2.5 rounded-full bg-secondary/20"
-                          indicatorClassName={isFunded ? "bg-green-500" : "bg-primary"}
-                        />
-                        <p className="text-xs text-muted-foreground text-right">{Math.round(progress)}% funded</p>
+                      <div className="absolute top-4 right-4 flex gap-2">
+                        {isCurrent && (
+                          <Badge className="bg-primary hover:bg-primary text-primary-foreground font-semibold px-3 shadow-md">
+                            Active This Month
+                          </Badge>
+                        )}
+                        {isFunded && !isCurrent && (
+                          <Badge className="bg-green-600 hover:bg-green-600 text-white font-semibold px-3 shadow-md">
+                            Fully Funded
+                          </Badge>
+                        )}
                       </div>
 
-                      {isCurrent ? (
-                        <Link href="/donate" className="block w-full">
-                          <Button className="w-full rounded-xl">
-                            Donate Now <ArrowRight className="ml-2 w-4 h-4" />
-                          </Button>
-                        </Link>
-                      ) : (
-                        cause.impact && (
+                      <div className="absolute bottom-4 left-4">
+                        <Badge variant="outline" className="text-white border-white/40 bg-black/40 backdrop-blur-md">
+                          {cause.category}
+                        </Badge>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col flex-1 p-6">
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3 font-medium">
+                        <Calendar className="w-4 h-4" />
+                        {dateLabel}
+                      </div>
+
+                      <h3 className="text-xl font-serif font-bold mb-3 line-clamp-2">{cause.title}</h3>
+                      <p className="text-muted-foreground text-sm flex-1 line-clamp-3 mb-6">
+                        {cause.description}
+                      </p>
+
+                      <div className="space-y-4 mt-auto">
+                        <div className="space-y-2">
+                          <div className="flex justify-between text-sm font-semibold">
+                            <span className="text-primary">{formatINR(cause.raisedAmount)} raised</span>
+                            <span className="text-muted-foreground flex items-center gap-1">
+                              <Target className="w-3 h-3" /> {formatINR(cause.goalAmount)}
+                            </span>
+                          </div>
+                          <Progress
+                            value={progress}
+                            className="h-2.5 rounded-full bg-secondary/20"
+                            indicatorClassName={isFunded ? "bg-green-500" : "bg-primary"}
+                          />
+                          <p className="text-xs text-muted-foreground text-right">{Math.round(progress)}% funded</p>
+                        </div>
+
+                        <div className="flex items-center justify-between pt-2">
+                          {isCurrent ? (
+                            <Button
+                              className="rounded-xl"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              Donate Now <ArrowRight className="ml-2 w-4 h-4" />
+                            </Button>
+                          ) : (
+                            <span className="text-sm text-primary font-medium">
+                              View photos & videos →
+                            </span>
+                          )}
+                        </div>
+
+                        {cause.impact && (
                           <div className="pt-2 border-t text-xs text-muted-foreground">
                             <span className="font-semibold text-foreground">Impact: </span>
                             {cause.impact}
                           </div>
-                        )
-                      )}
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
+                </Link>
               );
             })}
           </div>
-        )}
+        )
+        }
 
         {!isLoading && !error && sortedCauses.length === 0 && (
           <div className="text-center py-20 bg-muted/50 rounded-2xl border border-dashed">
