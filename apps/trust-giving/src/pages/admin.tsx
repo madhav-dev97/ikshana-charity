@@ -14,8 +14,17 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Textarea } from "@/components/ui/textarea";
+import { MediaUpload } from "@/components/ui/media-upload";
 
 const API_BASE = import.meta.env.VITE_API_URL;
+
+type MediaItem = {
+  id: number;
+  mediaType: "photo" | "video";
+  filePath: string;
+  caption: string | null;
+  publicUrl?: string;
+};
 
 const MONTH_NAMES = [
   "Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -162,6 +171,7 @@ function CreateCauseModal({
   const [goalAmount, setGoalAmount] = useState("");
   const [ngoName, setNgoName] = useState("");
   const [imageUrl, setImageUrl] = useState("");
+  const [, setMediaFiles] = useState<FileList | null>(null);
   const [impact, setImpact] = useState("");
   const [beneficiaries, setBeneficiaries] = useState("");
   const [isCurrent, setIsCurrent] = useState(false);
@@ -314,6 +324,10 @@ function CreateCauseModal({
             </div>
 
             <div className="space-y-1 md:col-span-2">
+              <label className="text-sm text-muted-foreground">Media can be added after creating the campaign.</label>
+            </div>
+
+            <div className="space-y-1 md:col-span-2">
               <label className="text-sm font-medium">Campaign Description *</label>
               <Textarea
                 placeholder="Provide details about the cause and what the funds will be used for..."
@@ -389,6 +403,8 @@ function AdminDashboard() {
     queryFn: () => apiFetch("/admin/notification-status"),
   });
 
+  const [managingMediaCause, setManagingMediaCause] = useState<Cause | null>(null);
+
   const createCause = useMutation({
     mutationFn: (data: Record<string, unknown>) =>
       apiFetch("/causes", { method: "POST", body: JSON.stringify(data) }),
@@ -424,6 +440,27 @@ function AdminDashboard() {
 
   const currentCause = causes.find((c) => c.isCurrent);
 
+  const mediaQuery = useQuery<MediaItem[]>({
+    queryKey: ["cause-media", managingMediaCause?.id],
+    queryFn: async () => {
+      const items = await apiFetch(`/causes/${managingMediaCause?.id}/media`);
+      return items.map((item: any) => {
+        const { data } = supabase.storage.from("campaigns").getPublicUrl(item.filePath);
+        return {
+          ...item,
+          publicUrl: data?.publicUrl ?? "",
+        } as MediaItem;
+      });
+    },
+    enabled: Boolean(managingMediaCause?.id),
+  });
+
+  const deleteMedia = useMutation({
+    mutationFn: async (mediaId: number) =>
+      apiFetch(`/media/${mediaId}`, { method: "DELETE" }),
+    onSuccess: () => mediaQuery.refetch(),
+  });
+
   return (
 
     <div className="min-h-screen bg-muted/30">
@@ -433,6 +470,81 @@ function AdminDashboard() {
           onClose={() => setEditingCause(null)}
           onSave={saveGoal}
         />
+      )}
+
+      {managingMediaCause && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 overflow-y-auto py-8">
+          <div className="bg-background rounded-2xl shadow-2xl p-6 w-full max-w-3xl border my-auto">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="font-serif font-bold text-xl">Manage Media</h3>
+                <p className="text-sm text-muted-foreground mt-1">Campaign: {managingMediaCause.title}</p>
+              </div>
+              <Button variant="ghost" size="sm" onClick={() => setManagingMediaCause(null)} className="h-8 w-8 p-0">
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
+
+            <div className="space-y-6">
+              <MediaUpload
+                causeId={managingMediaCause.id}
+                onChange={() => undefined}
+                onUploadComplete={() => mediaQuery.refetch()}
+              />
+
+              <div className="rounded-xl border p-4 space-y-4">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-base font-semibold">Existing Media</h4>
+                  <span className="text-xs text-muted-foreground">{mediaQuery.data?.length ?? 0} items</span>
+                </div>
+
+                {mediaQuery.isLoading && <p>Loading media...</p>}
+                {mediaQuery.isError && <p className="text-sm text-red-600">Failed to load media.</p>}
+
+                {!mediaQuery.isLoading && mediaQuery.data?.length === 0 && (
+                  <p className="text-sm text-muted-foreground">No media uploaded yet.</p>
+                )}
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {mediaQuery.data?.map((item) => (
+                    <div key={item.id} className="rounded-xl border p-3 bg-muted/10">
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="text-sm font-semibold">{item.mediaType}</div>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => deleteMedia.mutate(item.id)}
+                          disabled={deleteMedia.isPending}
+                        >
+                          Delete
+                        </Button>
+                      </div>
+
+                      <div className="mt-3">
+                        {item.mediaType === "photo" ? (
+                          <img
+                            src={item.publicUrl}
+                            alt={item.caption ?? managingMediaCause?.title}
+                            className="h-40 w-full rounded-md object-cover border"
+                            loading="lazy"
+                          />
+                        ) : (
+                          <video controls className="w-full rounded-md border">
+                            <source src={item.publicUrl} />
+                          </video>
+                        )}
+                      </div>
+
+                      {item.caption && (
+                        <div className="mt-2 text-xs text-muted-foreground">{item.caption}</div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
 
       {isCreatingCause && (
@@ -654,6 +766,14 @@ function AdminDashboard() {
                             className="h-8 px-2 text-muted-foreground hover:text-foreground"
                           >
                             <Pencil className="w-3.5 h-3.5" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setManagingMediaCause(cause)}
+                            className="h-8 px-2 text-muted-foreground hover:text-foreground"
+                          >
+                            Media
                           </Button>
                           {!cause.isCurrent && (
                             <Button
