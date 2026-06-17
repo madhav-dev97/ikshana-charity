@@ -18,6 +18,9 @@ import CauseDetail from "@/pages/cause-detail";
 import AdminLogin from "@/pages/admin-login";
 import ProtectedRoute from "./components/auth/protected-route";
 import { useSupabaseLogo } from "@/hooks/use-supabase-logo";
+import { setBaseUrl } from "@workspace/api-client-react";
+
+setBaseUrl(import.meta.env.VITE_API_URL);
 
 function FaviconUpdater() {
   const { logoUrl } = useSupabaseLogo();
