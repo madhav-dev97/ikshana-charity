@@ -1,0 +1,20 @@
+Reading config file 'C:\work\demo-app\Charity-Connect\libs\db\drizzle.config.ts'
+Pulling from ['public'] list of schemas
+
+Using 'pg' driver for database querying
+[⣷] 0 tables fetching
+[⣷] 0 columns fetching
+[⣷] 0 enums fetching
+[⣷] 0 indexes fetching
+[⣷] 0 foreign keys fetching
+[⣷] 0 policies fetching
+[⣷] 0 check constraints fetching
+[⣷] 0 views fetching
+[2K[1G[⣷] 0 tables fetching
+[⣷] 0 columns fetching
+[⣷] 0 enums fetching
+[⣷] 0 indexes fetching
+[⣷] 0 foreign keys fetching
+[⣷] 0 policies fetching
+[⣷] 0 check constraints fetching
+[⣷] 0 views fetching
