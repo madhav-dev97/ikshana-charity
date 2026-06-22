@@ -14,6 +14,6 @@ export default defineConfig({
   schemaFilter: ["public"],
   dbCredentials: {
     url: connectionString,
-    ssl: true,
+    ssl: { rejectUnauthorized: false },
   },
 });
