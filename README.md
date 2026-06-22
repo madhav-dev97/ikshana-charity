@@ -36,7 +36,14 @@ pnpm install
 Run a quick database connectivity check (optional):
 
 ```bash
-pnpm exec node lib/db/test-db.mjs
+pnpm exec node libs/db/test-db.mjs
+```
+
+Or from the db package directory:
+
+```bash
+cd libs/db
+pnpm exec node test-db.mjs
 ```
 
 Apply the Drizzle schema to the database:
