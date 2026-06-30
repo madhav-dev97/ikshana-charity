@@ -2,6 +2,8 @@ import { useParams } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 
+const API_BASE = import.meta.env.VITE_API_URL;
+
 type Cause = {
   id: number;
   title: string;
@@ -31,7 +33,7 @@ export default function CauseDetail() {
   } = useQuery<Cause>({
     queryKey: ["cause", causeId],
     queryFn: async () => {
-      const res = await fetch(`/api/causes/${causeId}`);
+      const res = await fetch(`${API_BASE}/api/causes/${causeId}`);
 
       if (!res.ok) {
         throw new Error("Failed to load cause");
@@ -49,7 +51,7 @@ export default function CauseDetail() {
   } = useQuery<MediaItem[]>({
     queryKey: ["cause-media", causeId],
     queryFn: async () => {
-      const res = await fetch(`/api/causes/${causeId}/media`);
+      const res = await fetch(`${API_BASE}/api/causes/${causeId}/media`);
 
       if (!res.ok) {
         throw new Error("Failed to load media");
